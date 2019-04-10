@@ -4,7 +4,7 @@ const router = require('koa-joi-router');
 
 const api = router();
 
-api.url('/api')
+api.prefix('/api')
 
 const app = new koa();
 app.use(api.middleware());
