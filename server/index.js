@@ -1,10 +1,11 @@
 
-const koa = require('koa');
-const router = require('koa-joi-router');
+const koa       = require('koa'),
+      router    = require('koa-joi-router'),
+      marketAPI = require('./market'),
+      api       = router();
 
-const api = router();
-
-api.prefix('/api')
+api.prefix('/api');
+marketAPI(api);
 
 const app = new koa();
 app.use(api.middleware());
