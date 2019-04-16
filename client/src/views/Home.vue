@@ -1,11 +1,68 @@
 <template>
-  <div class="home">
-
+  <div id="app">
+    <div class="container">
+      <div class="Chart__list">
+        <div class="Chart">
+          <h2>Linechart</h2>
+          <line-example :chartData="chartData"></line-example>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
+
+import LineExample from '@/components/LineChart.js'
+
 export default {
-  name: 'home'
+  name: 'home',
+  data() {
+    return {
+      chartData: {
+        labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+        datasets: [
+          {
+            label: 'Data One',
+            borderColor: '#FC2525',
+            pointBackgroundColor: 'lightgrey',
+            borderWidth: 1,
+            pointBorderColor: 'lightgrey',
+            backgroundColor: 'rgba(255, 0, 0)',
+            data: [40, 39, 10, 40, 39, 80, 40]
+          },
+          {
+            label: 'Data Two',
+            borderColor: 'rgba(0, 150, 255)',
+            pointBackgroundColor: 'lightgrey',
+            pointBorderColor: 'lightgrey',
+            borderWidth: 1,
+            backgroundColor: 'rgba(0, 231, 255)',
+            data: [60, 55, 32, 10, 2, 12, 53]
+          }
+        ]
+      }
+    }
+  },
+  components: {
+    LineExample
+  }
 }
+
 </script>
+
+<style>
+#app {
+  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-align: center;
+  color: #2c3e50;
+  margin-top: 60px;
+}
+.container {
+  max-width: 800px;
+  margin:  0 auto;
+  background: #212733;
+}
+</style>
