@@ -3,8 +3,8 @@
     <div class="container">
       <div class="Chart__list">
         <div class="Chart">
-          <h2>Linechart</h2>
-          <line-chart :chartData="chartData"></line-chart>
+          <h2>{{ stock }}</h2>
+          <line-chart v-if="ready" :chartData="chartData"></line-chart>
         </div>
       </div>
     </div>
@@ -24,7 +24,7 @@ export default {
 	props: ['stock'],
   data() {
     return {
-      chartData: {
+      testChartData: {
         labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
         datasets: [
           {
@@ -46,14 +46,46 @@ export default {
             data: [60, 55, 32, 10, 2, 12, 53]
           }
         ]
-      }
+      },
+      chartData: {
+        labels: [],
+        datasets: []
+      },
+      ready: false
     }
   },
   mounted() {
+    let self = this;
     axios
       .get(`http://localhost:3000/api/get/stock/${this.stock}`)
       .then((response) => {
-        console.log(response.data);
+        let data = response.data["Time Series (Daily)"]
+        let meta = response.data["Meta Data"]
+        console.log(data);
+
+        self.chartData.datasets.push({
+          label: self.stock,
+          borderColor: '#FC2525',
+          pointBackgroundColor: 'lightgrey',
+          borderWidth: 1,
+          pointBorderColor: 'lightgrey',
+          backgroundColor: 'rgba(255, 0, 0)',
+          data: []
+        })
+        
+        for (const time in data) {
+          const point = data[time];
+          
+          let cleanTime = time.split('-')
+              cleanTime = `${cleanTime[1]}/${cleanTime[2]}`
+          
+          self.chartData.labels.push(cleanTime);
+          self.chartData.datasets[0].data.push(Math.round(Number(point["4. close"])))
+          
+        }
+
+        console.log(self)
+        self.ready = true;
       })
   }
 }
