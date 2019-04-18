@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="graph">
     <div class="container">
       <div class="Chart__list">
         <div class="Chart">
@@ -13,7 +13,7 @@
 
 <script>
 
-import LineExample from '@/components/LineChart.js'
+import LineChart from '@/components/LineChart.js'
 
 export default {
   name: 'home',
@@ -45,7 +45,7 @@ export default {
     }
   },
   components: {
-    LineExample
+    LineChart
   }
 }
 
