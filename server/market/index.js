@@ -8,7 +8,7 @@ module.exports = (api) => {
 
     ctx.body = await new Promise(function (resolve, reject) {
       axios
-        .get(`https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=${stock}&apikey=${serverPrivate.api.key}`)
+        .get(`https://www.quandl.com/api/v3/datasets/EOD/${stock}/data.json?api_key=${serverPrivate.api.key}`)
         .then(function (response) {
           let data = response.data
           resolve(data)

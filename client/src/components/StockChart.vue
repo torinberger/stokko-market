@@ -57,10 +57,16 @@ export default {
   mounted() {
     let self = this;
     axios
-      .get(`http://localhost:3000/api/get/stock/${this.stock}`)
+      .get(`http://localhost:3000/api/get/stock/${this.stock}`, {
+          headers: {
+            'Access-Control-Allow-Origin': '*'
+          }
+        })
       .then((response) => {
-        let data = response.data["Time Series (Daily)"]
-        let meta = response.data["Meta Data"]
+        console.log(response)
+
+        let data = response.data.dataset_data.data.reverse();
+        let meta = response.data.dataset_data.column_names;
         console.log(data);
 
         self.chartData.datasets.push({
@@ -72,15 +78,15 @@ export default {
           backgroundColor: 'rgba(255, 0, 0)',
           data: []
         })
-        
-        for (const time in data) {
-          const point = data[time];
+
+        for (let i = 0; i < data.length; i++) {
           
-          let cleanTime = time.split('-')
-              cleanTime = `${cleanTime[1]}/${cleanTime[2]}`
+          const point = data[i];
           
+          let cleanTime = point[0];
+
           self.chartData.labels.push(cleanTime);
-          self.chartData.datasets[0].data.push(Math.round(Number(point["4. close"])))
+          self.chartData.datasets[0].data.push(Math.round(Number(point[11])))
           
         }
 
