@@ -56,6 +56,9 @@ export default {
   },
   mounted () {
     let self = this
+
+    this.$q.loadingBar.start()
+
     axios
       .get(`http://localhost:3000/api/get/stock/${this.stock}`, {
         headers: {
@@ -88,6 +91,9 @@ export default {
         }
 
         console.log(self)
+
+        this.$q.loadingBar.stop()
+
         self.ready = true
       })
   }
