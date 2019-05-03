@@ -14,9 +14,9 @@ export default {
   components: {
     StockChart
   },
-  data() {
+  data () {
     return {
-      stock: "AAPL"
+      stock: 'AAPL'
     }
   }
 }

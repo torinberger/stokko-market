@@ -9,10 +9,10 @@ export default {
   },
   props: ['chartData'],
   mounted () {
-    let { chartData } = this
+    const { chartData } = this
 
     for (let i = 0; i < chartData.datasets.length; i++) {
-      let color = chartData.datasets[i].backgroundColor.slice(0, -1)
+      const color = chartData.datasets[i].backgroundColor.slice(0, -1)
 
       this.gradients[i] = this.$refs.canvas.getContext('2d').createLinearGradient(0, 0, 0, 450)
       this.gradients[i].addColorStop(0, `${color}, 0.5)`)

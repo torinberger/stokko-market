@@ -20,9 +20,9 @@ export default {
   name: 'stockChart',
   components: {
     LineChart
-	},
-	props: ['stock'],
-  data() {
+  },
+  props: ['stock'],
+  data () {
     return {
       testChartData: {
         labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
@@ -54,20 +54,19 @@ export default {
       ready: false
     }
   },
-  mounted() {
-    let self = this;
+  mounted () {
+    let self = this
     axios
       .get(`http://localhost:3000/api/get/stock/${this.stock}`, {
-          headers: {
-            'Access-Control-Allow-Origin': '*'
-          }
-        })
+        headers: {
+          'Access-Control-Allow-Origin': '*'
+        }
+      })
       .then((response) => {
         console.log(response)
 
-        let data = response.data.dataset_data.data.reverse();
-        let meta = response.data.dataset_data.column_names;
-        console.log(data);
+        let data = response.data.dataset_data.data.reverse()
+        console.log(data)
 
         self.chartData.datasets.push({
           label: self.stock,
@@ -80,18 +79,16 @@ export default {
         })
 
         for (let i = 0; i < data.length; i++) {
-          
-          const point = data[i];
-          
-          let cleanTime = point[0];
+          const point = data[i]
 
-          self.chartData.labels.push(cleanTime);
+          let cleanTime = point[0]
+
+          self.chartData.labels.push(cleanTime)
           self.chartData.datasets[0].data.push(Math.round(Number(point[11])))
-          
         }
 
         console.log(self)
-        self.ready = true;
+        self.ready = true
       })
   }
 }
