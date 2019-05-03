@@ -3,8 +3,11 @@
     <div class="container">
       <div class="Chart__list">
         <div class="Chart">
-          <h2>{{ stock }}</h2>
+          <!-- <h2>{{ stock }}</h2> -->
           <line-chart v-if="ready" :chartData="chartData"></line-chart>
+          <div class="chart-loading-container" v-if="!ready" style="width: 800px; height: 400px; background: #212733;">
+            <q-spinner-oval class="chart-loading" size="50px" color="blue-6" />
+          </div>
         </div>
       </div>
     </div>
@@ -24,29 +27,6 @@ export default {
   props: ['stock'],
   data () {
     return {
-      testChartData: {
-        labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-        datasets: [
-          {
-            label: 'Data One',
-            borderColor: '#FC2525',
-            pointBackgroundColor: 'lightgrey',
-            borderWidth: 1,
-            pointBorderColor: 'lightgrey',
-            backgroundColor: 'rgba(255, 0, 0)',
-            data: [40, 39, 10, 40, 39, 80, 40]
-          },
-          {
-            label: 'Data Two',
-            borderColor: 'rgba(0, 150, 255)',
-            pointBackgroundColor: 'lightgrey',
-            pointBorderColor: 'lightgrey',
-            borderWidth: 1,
-            backgroundColor: 'rgba(0, 231, 255)',
-            data: [60, 55, 32, 10, 2, 12, 53]
-          }
-        ]
-      },
       chartData: {
         labels: [],
         datasets: []
@@ -56,8 +36,6 @@ export default {
   },
   mounted () {
     let self = this
-
-    this.$q.loadingBar.start()
 
     axios
       .get(`http://localhost:3000/api/get/stock/${this.stock}`, {
@@ -73,11 +51,11 @@ export default {
 
         self.chartData.datasets.push({
           label: self.stock,
-          borderColor: '#FC2525',
-          pointBackgroundColor: 'lightgrey',
-          borderWidth: 1,
-          pointBorderColor: 'lightgrey',
-          backgroundColor: 'rgba(255, 0, 0)',
+          borderColor: 'rgb(13, 71, 161)',
+          pointBackgroundColor: 'rgb(179, 229, 252)',
+          borderWidth: 2,
+          pointBorderColor: 'rgb(179, 229, 252)',
+          backgroundColor: 'rgb(68, 138, 255)',
           data: []
         })
 
@@ -92,8 +70,6 @@ export default {
 
         console.log(self)
 
-        this.$q.loadingBar.stop()
-
         self.ready = true
       })
   }
@@ -106,5 +82,11 @@ export default {
   max-width: 800px;
   margin:  0 auto;
   background: #212733;
+}
+
+.chart-loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 </style>
