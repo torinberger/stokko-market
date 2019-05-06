@@ -1,5 +1,5 @@
 <template>
-  <div id="graph">
+  <div id="home">
     <stock-chart :stock="stock"></stock-chart>
   </div>
 </template>
