@@ -12,6 +12,13 @@ export default new Router({
       path: '/',
       name: 'home',
       component: Home
+    },
+    {
+      path: '/stock/:stock',
+      name: 'stock',
+      component: function () {
+        return import(/* webpackChunkName: "stock" */ './views/Stock.vue')
+      }
     }
     /*
     {
