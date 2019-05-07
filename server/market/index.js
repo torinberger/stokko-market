@@ -8,7 +8,7 @@ module.exports = (api) => {
 
     ctx.body = await new Promise(function (resolve, reject) {
       axios
-        .get(`https://www.quandl.com/api/v3/datasets/EOD/${stock}/data.json?api_key=${serverPrivate.api.key}&collapse=quarterly&start_date=2000-01-01`)
+        .get(`https://www.quandl.com/api/v3/datasets/WIKI/${stock}/data.json?api_key=${serverPrivate.api.key}&collapse=quarterly&start_date=2000-01-01`)
         .then(function (response) {
           let data = response.data
           resolve(data)
