@@ -1,51 +1,38 @@
 {
   "name": "client",
-  "version": "0.1.0",
+  "version": "0.0.1",
+  "description": "A Quasar Framework app",
+  "productName": "stokko-market",
+  "cordovaId": "org.cordova.quasar.app",
+  "author": "torinberger <torinberger@torinberger.com>",
   "private": true,
   "scripts": {
-    "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint"
+    "lint": "eslint --ext .js,.vue src",
+    "test": "echo \"No test specified\" && exit 0"
   },
   "dependencies": {
+    "@quasar/extras": "^1.0.0",
     "axios": "^0.18.0",
-    "chart.js": "^2.8.0",
-    "quasar-extras": "^2.0.4",
-    "quasar-framework": "^0.17.0",
-    "vue": "^2.6.6",
-    "vue-chartjs": "^3.4.2",
-    "vue-router": "^3.0.1",
-    "vuex": "^3.0.1"
+    "quasar": "^1.0.0-beta.0"
   },
   "devDependencies": {
-    "@vue/cli-plugin-eslint": "^3.7.0",
-    "@vue/cli-service": "^3.5.0",
+    "@quasar/app": "^1.0.0-beta.0",
     "@vue/eslint-config-standard": "^4.0.0",
     "babel-eslint": "^10.0.1",
-    "babel-plugin-transform-imports": "1.5.0",
-    "eslint": "^5.16.0",
-    "eslint-config-airbnb-base": "^13.1.0",
-    "eslint-config-google": "^0.12.0",
-    "eslint-config-standard": "^12.0.0",
-    "eslint-plugin-import": "^2.17.2",
-    "eslint-plugin-node": "^8.0.1",
-    "eslint-plugin-promise": "^4.1.1",
-    "eslint-plugin-standard": "^4.0.0",
-    "eslint-plugin-vue": "^5.2.2",
-    "postcss-rtl": "^1.2.3",
-    "stylus": "^0.54.5",
-    "stylus-loader": "^3.0.2",
-    "vue-cli-plugin-quasar": "^0.17.1",
-    "vue-template-compiler": "^2.5.21"
+    "eslint": "^5.10.0",
+    "eslint-loader": "^2.1.1",
+    "eslint-plugin-vue": "^5.0.0",
+    "strip-ansi": "=3.0.1"
   },
-  "postcss": {
-    "plugins": {
-      "autoprefixer": {}
-    }
+  "engines": {
+    "node": ">= 8.9.0",
+    "npm": ">= 5.6.0",
+    "yarn": ">= 1.6.0"
   },
   "browserslist": [
-    "> 1%",
-    "last 2 versions",
-    "not ie <= 8"
-  ]
+    "last 1 version, not dead, ie >= 11"
+  ],
+  "resolutions": {
+    "ajv": "6.8.1"
+  }
 }
