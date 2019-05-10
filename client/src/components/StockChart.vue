@@ -4,7 +4,7 @@
       <div class="Chart__list">
         <div class="Chart">
           <!-- <h2>{{ stock }}</h2> -->
-          <line-chart v-if="ready" :chartData="chartData"></line-chart>
+          <line-chart v-if="ready && !errorMsg" :chartData="chartData"></line-chart>
           <div class="chart-loading-container" v-if="!ready" style="width: 800px; height: 400px; background: #212733;">
             <q-circular-progress
               indeterminate
@@ -12,6 +12,9 @@
               color="blue-6"
               class="q-ma-md"
             />
+          </div>
+          <div v-if="ready && errorMsg" class="chart-err-container" style="width: 800px; height: 400px; background: #212733;">
+            {{ errorMsg }}
           </div>
         </div>
       </div>
@@ -36,7 +39,8 @@ export default {
         labels: [],
         datasets: []
       },
-      ready: false
+      ready: false,
+      errorMsg: ''
     }
   },
   mounted () {
@@ -77,6 +81,11 @@ export default {
 
         self.ready = true
       })
+      .catch((err) => {
+        console.log(err)
+        this.errorMsg = 'Couldn\'t Find Stock'
+        this.ready = true
+      })
   }
 }
 
@@ -93,4 +102,12 @@ export default {
   justify-content: center;
   align-items: center;
 }
+
+.chart-err-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+}
+
 </style>

@@ -13,7 +13,7 @@
       @new-value="requestStock"
       @input="requestStock"
       placeholder="Basic autocomplete"
-      style="width: 100%; padding-bottom: 32px"
+      style="width: 100%;"
     >
       <template v-slot:no-option>
         <q-item>
@@ -24,36 +24,67 @@
       </template>
     </q-select>
 
-    <stock-chart :stock="$route.params.stock"></stock-chart>
+    <div v-bind:key="currentStock" v-for="currentStock in stocks">
+      <stock-chart :stock="currentStock"></stock-chart>
+    </div>
   </div>
 </template>
 
 <script>
 
-const stringOptions = [
-  'AAPL', 'Facebook', 'Twitter', 'Apple', 'Oracle'
-]
+import axios from 'axios'
 
 export default {
   name: 'Stock',
   components: {
     StockChart: () => import('../components/StockChart.vue')
   },
+
   data () {
     return {
       model: null,
-      options: stringOptions
+      stocks: [],
+      options: []
     }
+  },
+  created () {
+    this.stocks = [this.$route.params.stock]
+
+    let self = this
+
+    axios
+      .get(`http://localhost:3000/api/get/stocklist`, {
+        headers: {
+          'Access-Control-Allow-Origin': '*'
+        }
+      })
+      .then((response) => {
+        console.log('DONE')
+        console.log(response)
+        self.options = response.data
+      })
   },
   methods: {
     requestStock (input) {
       const stock = String(input)
       console.log(stock.toUpperCase())
+
+      this.stocks = []
+      this.stocks = [stock]
+
+      console.log(this.stocks)
+
+      history.pushState(
+        { urlPath: `/#/stock/${stock}` },
+        '',
+        `/#/stock/${stock}`
+      )
     },
     filterFn (val, update, abort) {
+      let self = this
       update(() => {
         const needle = val.toLowerCase()
-        this.options = stringOptions.filter(v => v.toLowerCase().indexOf(needle) > -1)
+        this.options = self.options.filter(v => v.toLowerCase().indexOf(needle) > -1)
       })
     }
   }
