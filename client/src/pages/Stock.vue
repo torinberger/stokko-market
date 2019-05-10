@@ -16,11 +16,14 @@
       filled
       v-model="model"
       use-input
+      hide-selected
+      fill-input
+      clearable
       input-debounce="0"
-      label="Simple filter"
       :options="options"
       @filter="filterFn"
-      style="width: 250px"
+      hint="Basic autocomplete"
+      style="width: 250px; padding-bottom: 32px"
     >
       <template v-slot:no-option>
         <q-item>
@@ -38,7 +41,7 @@
 <script>
 
 const stringOptions = [
-  'Google', 'Facebook', 'Twitter', 'Apple', 'Oracle'
+  'AAPL', 'Facebook', 'Twitter', 'Apple', 'Oracle'
 ]
 
 export default {
