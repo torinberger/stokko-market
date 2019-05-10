@@ -1,29 +1,19 @@
 <template>
   <div class="stock-page">
 
-    <!-- <q-search
-      inverted color="blue-6"
-      v-model="terms"
-      placeholder="Featuring static data">
-
-      <q-autocomplete
-        :static-data="{field: 'value', list: countries}"
-        @selected="requestStock"
-      />
-    </q-search> -->
-
     <q-select
       filled
       v-model="model"
       use-input
       hide-selected
       fill-input
-      clearable
       input-debounce="0"
       :options="options"
       @filter="filterFn"
-      hint="Basic autocomplete"
-      style="width: 250px; padding-bottom: 32px"
+      @new-value="requestStock"
+      @input="requestStock"
+      placeholder="Basic autocomplete"
+      style="width: 100%; padding-bottom: 32px"
     >
       <template v-slot:no-option>
         <q-item>
@@ -51,30 +41,16 @@ export default {
   },
   data () {
     return {
-      terms: '',
-      countries: [
-        {
-          value: 'test',
-          label: 'test',
-          icon: 'alarm'
-        }
-      ],
       model: null,
       options: stringOptions
     }
   },
   methods: {
-    requestStock () {
-      console.log(this.terms)
+    requestStock (input) {
+      const stock = String(input)
+      console.log(stock.toUpperCase())
     },
-    filterFn (val, update) {
-      if (val === '') {
-        update(() => {
-          this.options = stringOptions
-        })
-        return
-      }
-
+    filterFn (val, update, abort) {
       update(() => {
         const needle = val.toLowerCase()
         this.options = stringOptions.filter(v => v.toLowerCase().indexOf(needle) > -1)
