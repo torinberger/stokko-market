@@ -8,7 +8,7 @@
       hide-selected
       fill-input
       input-debounce="0"
-      :options="options"
+      :options="stockOptions"
       @filter="filterFn"
       @new-value="requestStock"
       @input="requestStock"
@@ -44,7 +44,8 @@ export default {
     return {
       model: null,
       stocks: [],
-      options: []
+      stockOptions: [],
+      staticStocks: []
     }
   },
   created () {
@@ -59,15 +60,13 @@ export default {
         }
       })
       .then((response) => {
-        console.log('DONE')
-        console.log(response)
-        self.options = response.data
+        self.staticStocks = response.data
+        self.stockOptions = response.data
       })
   },
   methods: {
     requestStock (input) {
-      const stock = String(input)
-      console.log(stock.toUpperCase())
+      const stock = String(input).toUpperCase()
 
       this.stocks = []
       this.stocks = [stock]
@@ -84,7 +83,7 @@ export default {
       let self = this
       update(() => {
         const needle = val.toLowerCase()
-        this.options = self.options.filter(v => v.toLowerCase().indexOf(needle) > -1)
+        this.stockOptions = self.staticStocks.filter(v => v.toLowerCase().indexOf(needle) > -1)
       })
     }
   }
