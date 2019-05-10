@@ -6,7 +6,12 @@
           <!-- <h2>{{ stock }}</h2> -->
           <line-chart v-if="ready" :chartData="chartData"></line-chart>
           <div class="chart-loading-container" v-if="!ready" style="width: 800px; height: 400px; background: #212733;">
-            <q-spinner-oval class="chart-loading" size="50px" color="blue-6" />
+            <q-circular-progress
+              indeterminate
+              size="40px"
+              color="blue-6"
+              class="q-ma-md"
+            />
           </div>
         </div>
       </div>
