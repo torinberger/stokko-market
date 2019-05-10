@@ -22,7 +22,7 @@ module.exports = function (ctx) {
     ],
 
     framework: {
-      // all: true, // --- includes everything; for dev only!
+      all: true, // --- includes everything; for dev only!
 
       components: [
         'QLayout',
