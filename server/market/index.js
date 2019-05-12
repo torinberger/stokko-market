@@ -16,6 +16,7 @@ module.exports = (api) => {
             resolve(data)
           })
           .catch(function (e) {
+            resolve({ type: 'err' })
             throw e
           })
       })

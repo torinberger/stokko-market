@@ -55,6 +55,11 @@ export default {
       .then((response) => {
         console.log(response)
 
+        if (response.data.type === 'err') {
+          this.errorMsg = 'Couldn\'t Find Stock'
+          this.ready = true
+        }
+
         let data = response.data.dataset_data.data.reverse()
         console.log(data)
 
