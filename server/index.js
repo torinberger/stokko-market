@@ -4,10 +4,11 @@ const router = require('koa-joi-router')
 const cors = require('koa-cors')
 
 const marketAPI = require('./market')
+const database = require('./database')
 const api = router()
 
 api.prefix('/api')
-marketAPI(api)
+marketAPI(api, database)
 
 const app = new Koa()
 app.use(cors())
