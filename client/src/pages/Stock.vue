@@ -51,6 +51,10 @@ export default {
   created () {
     this.stocks = [this.$route.params.stock]
 
+    if (this.stocks[0] === undefined) {
+      this.stocks = []
+    }
+
     let self = this
 
     axios

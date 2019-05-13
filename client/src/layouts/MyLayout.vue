@@ -4,7 +4,7 @@
       <q-toolbar>
 
         <q-toolbar-title>
-          Quasar App
+          Stokko Market
         </q-toolbar-title>
 
         <div>
@@ -42,49 +42,22 @@
             <q-icon name="close" />
           </q-btn>
         </q-item-label>
-        <q-item clickable tag="a" target="_blank" href="http://v1.quasar-framework.org">
+        <q-item clickable tag="a" href="/#/">
           <q-item-section avatar>
-            <q-icon name="school" />
+            <q-icon name="home" />
           </q-item-section>
           <q-item-section>
-            <q-item-label>Docs</q-item-label>
-            <q-item-label caption>v1.quasar-framework.org</q-item-label>
+            <q-item-label>Home</q-item-label>
+            <q-item-label caption>Homepage</q-item-label>
           </q-item-section>
         </q-item>
-        <q-item clickable tag="a" target="_blank" href="https://github.com/quasarframework/">
+        <q-item clickable tag="a" href="/#/stock/">
           <q-item-section avatar>
-            <q-icon name="code" />
+            <q-icon name="bar_chart" />
           </q-item-section>
           <q-item-section>
-            <q-item-label>Github</q-item-label>
-            <q-item-label caption>github.com/quasarframework</q-item-label>
-          </q-item-section>
-        </q-item>
-        <q-item clickable tag="a" target="_blank" href="http://chat.quasar-framework.org">
-          <q-item-section avatar>
-            <q-icon name="chat" />
-          </q-item-section>
-          <q-item-section>
-            <q-item-label>Discord Chat Channel</q-item-label>
-            <q-item-label caption>chat.quasar-framework.org</q-item-label>
-          </q-item-section>
-        </q-item>
-        <q-item clickable tag="a" target="_blank" href="https://forum.quasar-framework.org">
-          <q-item-section avatar>
-            <q-icon name="record_voice_over" />
-          </q-item-section>
-          <q-item-section>
-            <q-item-label>Forum</q-item-label>
-            <q-item-label caption>forum.quasar-framework.org</q-item-label>
-          </q-item-section>
-        </q-item>
-        <q-item clickable tag="a" target="_blank" href="https://twitter.com/quasarframework">
-          <q-item-section avatar>
-            <q-icon name="rss_feed" />
-          </q-item-section>
-          <q-item-section>
-            <q-item-label>Twitter</q-item-label>
-            <q-item-label caption>@quasarframework</q-item-label>
+            <q-item-label>Stocks</q-item-label>
+            <q-item-label caption>Search Stocks</q-item-label>
           </q-item-section>
         </q-item>
       </q-list>
