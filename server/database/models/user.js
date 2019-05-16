@@ -5,7 +5,8 @@ const Schema = mongoose.Schema
 const UserSchema = new Schema({
   username: String,
   password: String,
-  balance: Number
+  balance: Number,
+  holdings: [{ type: Schema.Types.ObjectId, ref: 'Holding' }]
 })
 
 // Create model

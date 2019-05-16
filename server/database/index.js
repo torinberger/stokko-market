@@ -18,5 +18,8 @@ mongoose.connection.once('open', function () {
 
 module.exports = function () {
   return {
+    user: require('./controllers/user.js'),
+    stock: require('./controllers/stock.js'),
+    holding: require('./controllers/holding.js')
   }
 }
