@@ -1,6 +1,6 @@
 
 const axios = require('axios')
-const serverPrivate = require('../private')
+const serverPrivate = require('../../private')
 const stockList = require('./stockList').stocks
 
 module.exports = (api) => {

@@ -22,6 +22,15 @@ module.exports = function () {
         }
       })
     },
+    async validateUser (target, callback) {
+      User.findOne(target, function (err, data) {
+        if (err) {
+          callback(err)
+        } else {
+          callback(data)
+        }
+      })
+    },
     async addUser (body, callback) {
       new User(body).save(function (err, user) {
         if (err) {
