@@ -17,4 +17,20 @@ module.exports = (api, database) => {
       })
     }
   })
+
+  api.route({
+    method: 'post',
+    path: '/auth/create',
+    validate: { type: 'json' },
+    handler: async (ctx) => {
+      const userDetails = ctx.request.body
+
+      ctx.body = await new Promise(function (resolve, reject) {
+        user.addUser(userDetails, (newUser) => {
+          console.log(newUser)
+          resolve(newUser)
+        })
+      })
+    }
+  })
 }
