@@ -60,6 +60,15 @@
             <q-item-label caption>Search Stocks</q-item-label>
           </q-item-section>
         </q-item>
+        <q-item clickable tag="a" href="/#/auth/login">
+          <q-item-section avatar>
+            <q-icon name="account_circle" />
+          </q-item-section>
+          <q-item-section>
+            <q-item-label>Login</q-item-label>
+            <q-item-label caption>Login/Register</q-item-label>
+          </q-item-section>
+        </q-item>
       </q-list>
     </q-drawer>
 
