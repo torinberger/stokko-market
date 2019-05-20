@@ -1,14 +1,12 @@
 <template>
-  <div>
-    <div id="auth">
-      <div v-if="mode == 'login'" id="login">
-        <h3>Login</h3>
-        <p>Or <a @click="switchMode">Register</a></p>
-      </div>
-      <div v-if="mode == 'register'" id="register">
-        <h3>Register</h3>
-        <p>Or <a @click="switchMode">Login</a></p>
-      </div>
+  <div id="auth">
+    <div v-if="mode == 'login'" class="auth-tab">
+      <h3>Login</h3>
+      <p>Or <a @click="switchMode">Register</a></p>
+    </div>
+    <div v-if="mode == 'register'" class="auth-tab">
+      <h3>Register</h3>
+      <p>Or <a @click="switchMode">Login</a></p>
     </div>
   </div>
 </template>
@@ -45,5 +43,20 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
+#auth {
+  width: 100%;
+  height: calc(100vh - 50px);
+  display: flex;
+}
+
+h3 {
+  margin-top: 0;
+}
+
+.auth-tab {
+  margin: auto;
+  height: 80vh;
+  width: 20vw;
+}
 </style>
