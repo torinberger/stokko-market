@@ -31,7 +31,13 @@
 
         <q-tab-panel name="register">
           <div class="text-h6">Register</div>
-          <q-input v-model="name" label="Name" :rules="[ val => val && val.length > 0 || 'Please enter a name']"/>
+          <q-form
+            @submit="register"
+          >
+            <q-input v-model="username" label="Username" :rules="[ val => val && val.length > 0 || 'Please enter a username']"/>
+            <q-input v-model="password" type="password" label="Password" :rules="[ val => val && val.length > 0 || 'Please enter a password']"/>
+            <q-btn label="Submit" type="submit" color="primary"/>
+          </q-form>
         </q-tab-panel>
       </q-tab-panels>
     </q-card>
@@ -44,7 +50,8 @@ export default {
   data () {
     return {
       mode: this.$route.params.mode,
-      name: null
+      username: null,
+      password: null
     }
   },
   created () {
@@ -58,16 +65,6 @@ export default {
       `/#/auth/${this.mode}`
     )
   },
-  methods: {
-    switchMode () {
-      this.mode = this.mode === 'login' ? this.mode = 'register' : this.mode = 'login'
-      history.pushState(
-        { urlPath: `/#/auth/${this.mode}` },
-        '',
-        `/#/auth/${this.mode}`
-      )
-    }
-  },
   watch: {
     mode (val) {
       history.pushState(
@@ -75,6 +72,11 @@ export default {
         '',
         `/#/auth/${val}`
       )
+    }
+  },
+  methods: {
+    register () {
+      console.log(this.username, this.password)
     }
   }
 }
