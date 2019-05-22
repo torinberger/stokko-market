@@ -12,9 +12,24 @@ module.exports = (api, database) => {
       ctx.body = await new Promise(function (resolve, reject) {
         user.validateUser(userDetails, (validated) => {
           console.log(validated)
+
+          if (validated !== null) {
+            console.log('Validated!')
+            ctx.user = String(validated._id)
+          }
+
           resolve(validated)
         })
       })
+    }
+  })
+
+  api.get('/auth/validated', async (ctx) => {
+    if (ctx.user !== undefined) {
+      console.log(ctx.user)
+      ctx.body = ctx.user
+    } else {
+      ctx.body = 'Not Validated!'
     }
   })
 

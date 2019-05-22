@@ -107,6 +107,21 @@ export default {
             this.$q.notify({ message: 'Succesfully Registered!', color: 'green' })
             self.mode = 'login'
           }
+
+          console.log('Checking Validation...')
+
+          axios
+            .get(`http://localhost:3000/api/auth/validated`)
+            .then((response) => {
+              console.log(response)
+
+              if (response.data === 'Not Validated!') {
+                this.$q.notify({ message: 'Not Validated!', color: 'red' })
+              } else {
+                console.log('Validated!')
+                this.$q.notify({ message: 'Validated!', color: 'green' })
+              }
+            })
         })
     },
     login () {
@@ -130,6 +145,21 @@ export default {
             this.$q.notify({ message: 'Incorrect Username/Password!', color: 'red' })
           } else {
             this.$q.notify({ message: 'Succesfully Logged In!', color: 'green' })
+
+            console.log('Checking Validation...')
+
+            axios
+              .get(`http://localhost:3000/api/auth/validated`)
+              .then((response) => {
+                console.log(response)
+
+                if (response.data === 'Not Validated!') {
+                  this.$q.notify({ message: 'Not Validated!', color: 'red' })
+                } else {
+                  console.log('Validated!')
+                  this.$q.notify({ message: 'Validated!', color: 'green' })
+                }
+              })
           }
         })
     }
