@@ -26,7 +26,13 @@
       <q-tab-panels v-model="mode" animated>
         <q-tab-panel name="login">
           <div class="text-h6">Login</div>
-          Login pls
+          <q-form
+            @submit="login"
+          >
+            <q-input v-model="username" label="Username" :rules="[ val => val && val.length > 0 || 'Please enter a username']"/>
+            <q-input v-model="password" type="password" label="Password" :rules="[ val => val && val.length > 0 || 'Please enter a password']"/>
+            <q-btn label="Submit" type="submit" color="primary"/>
+          </q-form>
         </q-tab-panel>
 
         <q-tab-panel name="register">
@@ -45,6 +51,8 @@
 </template>
 
 <script>
+import sha256 from 'crypto-js/sha256'
+
 export default {
   name: 'Auth',
   data () {
@@ -77,6 +85,9 @@ export default {
   methods: {
     register () {
       console.log(this.username, this.password)
+    },
+    login () {
+      console.log(this.username, String(sha256(String(this.password))))
     }
   }
 }
