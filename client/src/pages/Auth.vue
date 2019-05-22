@@ -51,6 +51,7 @@
 </template>
 
 <script>
+import axios from 'axios'
 import sha256 from 'crypto-js/sha256'
 
 export default {
@@ -84,10 +85,53 @@ export default {
   },
   methods: {
     register () {
-      console.log(this.username, this.password)
+      let self = this
+
+      console.log('Registering...')
+      console.log({
+        username: self.username,
+        password: String(sha256(String(self.password)))
+      })
+
+      axios
+        .post(`http://localhost:3000/api/auth/create`, {
+          username: self.username,
+          password: String(sha256(String(self.password)))
+        })
+        .then((response) => {
+          console.log(response)
+
+          if (response.data === 'Missing Register Details!') {
+            this.$q.notify({ message: 'Missing Register Details!', color: 'red' })
+          } else {
+            this.$q.notify({ message: 'Succesfully Registered!', color: 'green' })
+            self.mode = 'login'
+          }
+        })
     },
     login () {
-      console.log(this.username, String(sha256(String(this.password))))
+      let self = this
+
+      console.log('Logging In...')
+      console.log({
+        username: self.username,
+        password: String(sha256(String(self.password)))
+      })
+
+      axios
+        .post(`http://localhost:3000/api/auth/validate`, {
+          username: self.username,
+          password: String(sha256(String(self.password)))
+        })
+        .then((response) => {
+          console.log(response)
+
+          if (!response.data) {
+            this.$q.notify({ message: 'Incorrect Username/Password!', color: 'red' })
+          } else {
+            this.$q.notify({ message: 'Succesfully Logged In!', color: 'green' })
+          }
+        })
     }
   }
 }

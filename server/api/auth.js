@@ -25,6 +25,15 @@ module.exports = (api, database) => {
     handler: async (ctx) => {
       const userDetails = ctx.request.body
 
+      userDetails.balance = 100
+
+      console.log(userDetails)
+
+      if (!userDetails.username || !userDetails.password) {
+        ctx.body = 'Missing Register Details!'
+        return
+      }
+
       ctx.body = await new Promise(function (resolve, reject) {
         user.addUser(userDetails, (newUser) => {
           console.log(newUser)
