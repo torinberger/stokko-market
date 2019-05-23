@@ -1,18 +1,28 @@
 
 const Koa = require('koa')
-const router = require('koa-joi-router')
+const Router = require('koa-router')
 const cors = require('koa-cors')
 
 const marketAPI = require('./api/market')
 const authAPI = require('./api/auth')
 const database = require('./database')
-const api = router()
-
-api.prefix('/api')
-marketAPI(api, database)
-authAPI(api, database)
 
 const app = new Koa()
+
+const server = new Router()
+const api = new Router()
+
+// market routes
+const market = marketAPI(database)
+api.use('/market', market.routes())
+
+// auth routes
+const auth = authAPI(database)
+api.use('/auth', auth.routes())
+
+// link api routes
+server.use(api.routes(), api.allowedMethods())
+
+app.use(server.routes())
 app.use(cors())
-app.use(api.middleware())
 app.listen(3000)

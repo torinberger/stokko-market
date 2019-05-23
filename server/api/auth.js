@@ -1,60 +1,44 @@
 
 const user = require('../database/controllers/user')()
+const Router = require('koa-router')
 
-module.exports = (api, database) => {
-  api.route({
-    method: 'post',
-    path: '/auth/validate',
-    validate: { type: 'json' },
-    handler: async (ctx) => {
-      const userDetails = ctx.request.body
+module.exports = (database) => {
+  const auth = new Router()
 
-      ctx.body = await new Promise(function (resolve, reject) {
-        user.validateUser(userDetails, (validated) => {
-          console.log(validated)
+  auth.post('/login', async (ctx) => {
+    const userDetails = ctx.request.body
 
-          if (validated !== null) {
-            console.log('Validated!')
-            ctx.user = String(validated._id)
-          }
+    ctx.body = await new Promise(function (resolve, reject) {
+      user.validateUser(userDetails, (validated) => {
+        console.log('Request to validate user:')
+        console.log(validated)
 
-          resolve(validated)
-        })
+        resolve(validated)
       })
-    }
+    })
   })
 
-  api.get('/auth/validated', async (ctx) => {
-    if (ctx.user !== undefined) {
-      console.log(ctx.user)
-      ctx.body = ctx.user
-    } else {
-      ctx.body = 'Not Validated!'
+  auth.post('/auth/create', async (ctx) => {
+    const userDetails = ctx.request.body
+
+    userDetails.balance = 100
+
+    console.log('Request to create user:')
+    console.log(userDetails)
+
+    if (!userDetails.username || !userDetails.password) {
+      ctx.body = 'Missing Register Details!'
+      return
     }
-  })
 
-  api.route({
-    method: 'post',
-    path: '/auth/create',
-    validate: { type: 'json' },
-    handler: async (ctx) => {
-      const userDetails = ctx.request.body
-
-      userDetails.balance = 100
-
-      console.log(userDetails)
-
-      if (!userDetails.username || !userDetails.password) {
-        ctx.body = 'Missing Register Details!'
-        return
-      }
-
-      ctx.body = await new Promise(function (resolve, reject) {
-        user.addUser(userDetails, (newUser) => {
-          console.log(newUser)
-          resolve(newUser)
-        })
+    ctx.body = await new Promise(function (resolve, reject) {
+      user.addUser(userDetails, (newUser) => {
+        console.log('Added new user:')
+        console.log(newUser)
+        resolve(newUser)
       })
-    }
+    })
   })
+
+  return (auth)
 }

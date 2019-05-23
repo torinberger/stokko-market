@@ -1,11 +1,15 @@
 
 const axios = require('axios')
+const Router = require('koa-router')
+
 const serverPrivate = require('../../private')
 const stockList = require('./stockList').stocks
 
-module.exports = (api) => {
-  api.get('/get/stock/:stock', async (ctx) => {
-    let stock = ctx.request.params.stock
+module.exports = (database) => {
+  const market = new Router()
+
+  market.get('/get/stock/:stock', async (ctx) => {
+    let stock = ctx.params.stock
 
     if (stockList.includes(stock)) {
       ctx.body = await new Promise(function (resolve, reject) {
@@ -27,7 +31,9 @@ module.exports = (api) => {
     }
   })
 
-  api.get('/get/stocklist', async (ctx) => {
+  market.get('/get/stocklist', async (ctx) => {
     ctx.body = stockList
   })
+
+  return (market)
 }

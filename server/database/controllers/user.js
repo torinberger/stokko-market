@@ -37,7 +37,6 @@ module.exports = function () {
           callback(err)
           throw err
         } else {
-          console.log('Added new user to DB')
           callback(user)
         }
       })
