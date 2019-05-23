@@ -3,9 +3,9 @@ const Schema = mongoose.Schema
 
 // Create schema
 const UserSchema = new Schema({
-  username: String,
-  password: String,
-  balance: Number,
+  username: { type: String, unique: true, required: true },
+  password: { type: String, required: true },
+  balance: { type: Number, default: 100 },
   holdings: [{ type: Schema.Types.ObjectId, ref: 'Holding' }]
 })
 
