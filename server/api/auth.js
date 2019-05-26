@@ -18,7 +18,7 @@ module.exports = (database) => {
     })
   })
 
-  auth.post('/auth/create', async (ctx) => {
+  auth.post('/create', async (ctx) => {
     const userDetails = ctx.request.body
 
     userDetails.balance = 100

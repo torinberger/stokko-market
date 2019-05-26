@@ -10,7 +10,9 @@ const database = require('./database')
 const app = new Koa()
 
 const server = new Router()
-const api = new Router()
+const api = new Router({
+  prefix: '/api'
+})
 
 // market routes
 const market = marketAPI(database)
