@@ -19,7 +19,6 @@ module.exports = (database) => {
         console.log(validated)
 
         if (validated) {
-
           let exportUser = validated
           delete exportUser.password
 

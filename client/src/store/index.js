@@ -15,7 +15,14 @@ export default function (/* { ssrContext } */) {
     modules: {
       // example
     },
-
+    state: {
+      JWTtoken: ''
+    },
+    mutations: {
+      setJWTtoken (state, token) {
+        state.JWTtoken = token
+      }
+    },
     // enable strict mode (adds overhead!)
     // for dev mode only
     strict: process.env.DEV

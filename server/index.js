@@ -20,7 +20,6 @@ app
   }).unless({
     path: [
       /^\/api\/auth\/*/
-      // /^\/api\/market\/
     ]
   }))
 

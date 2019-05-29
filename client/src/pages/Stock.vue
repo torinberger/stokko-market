@@ -60,7 +60,8 @@ export default {
     axios
       .get(`http://localhost:3000/api/market/get/stocklist`, {
         headers: {
-          'Access-Control-Allow-Origin': '*'
+          'Access-Control-Allow-Origin': '*',
+          'Authorization': 'Bearer ' + self.$store.state.JWTtoken
         }
       })
       .then((response) => {

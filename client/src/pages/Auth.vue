@@ -130,6 +130,9 @@ export default {
             this.$q.notify({ message: 'Incorrect Username/Password!', color: 'red' })
           } else {
             this.$q.notify({ message: 'Succesfully Logged In!', color: 'green' })
+
+            this.$store.commit('setJWTtoken', response.data.token)
+            console.log(this.$store.state.JWTtoken)
           }
         }).catch(function (err) {
           console.log(err)
