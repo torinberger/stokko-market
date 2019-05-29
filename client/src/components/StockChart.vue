@@ -47,7 +47,7 @@ export default {
     let self = this
 
     axios
-      .get(`http://localhost:3000/api/get/stock/${this.stock}`, {
+      .get(`http://localhost:3000/api/market/get/stock/${this.stock}`, {
         headers: {
           'Access-Control-Allow-Origin': '*'
         }
