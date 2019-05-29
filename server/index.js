@@ -3,21 +3,24 @@ const Koa = require('koa')
 const Router = require('koa-router')
 const cors = require('koa-cors')
 const jwt = require('koa-jwt')
+const bodyParser = require('koa-bodyparser')
 
 const marketAPI = require('./api/market')
 const authAPI = require('./api/auth')
 const database = require('./database')
 
 const app = new Koa()
-app.use(cors())
+app
+  .use(cors())
+  .use(bodyParser())
 
 app
   .use(jwt({
     secret: require('./private.json').jwt.key
   }).unless({
     path: [
-      /^\/api\/auth\/*/,
-      /^\/api\/market\/*/
+      /^\/api\/auth\/*/
+      // /^\/api\/market\/
     ]
   }))
 

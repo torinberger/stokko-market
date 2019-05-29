@@ -107,8 +107,6 @@ export default {
             this.$q.notify({ message: 'Succesfully Registered!', color: 'green' })
             self.mode = 'login'
           }
-
-          console.log('Checking Validation...')
         })
     },
     login () {
@@ -132,9 +130,10 @@ export default {
             this.$q.notify({ message: 'Incorrect Username/Password!', color: 'red' })
           } else {
             this.$q.notify({ message: 'Succesfully Logged In!', color: 'green' })
-
-            console.log('Checking Validation...')
           }
+        }).catch(function (err) {
+          console.log(err)
+          self.$q.notify({ message: 'Incorrect Username/Password!', color: 'red' })
         })
     }
   }

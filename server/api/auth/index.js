@@ -10,25 +10,30 @@ module.exports = (database) => {
     const userDetails = ctx.request.body
 
     ctx.body = await new Promise(function (resolve, reject) {
+
+      console.log('Request to login user:')
+      console.log(userDetails)
+
       user.validateUser(userDetails, (validated) => {
         console.log('Request to validate user:')
         console.log(validated)
 
         if (validated) {
-          delete validated.password
+
+          let exportUser = validated
+          delete exportUser.password
+
+          console.log(exportUser)
 
           ctx.status = 200
 
           console.log(require('../../private.json').jwt.key)
           resolve({
-            token: jwtUtil.sign({
-              data: validated,
-              exp: Math.floor(Date.now() / 1000) + (60 * 60)
-            }, require('../../private.json').jwt.key),
-            message: 'Logged in!'
+            token: jwtUtil.sign({ username: validated.username, password: validated.password }, require('../../private.json').jwt.key),
+            user: exportUser
           })
         } else {
-          ctx.status = ctx.status = 401
+          ctx.status = 401
           resolve({
             message: 'Auth Err!'
           })
