@@ -121,7 +121,7 @@ export default {
       })
 
       axios
-        .post(`http://localhost:3000/api/auth/validate`, {
+        .post(`http://localhost:3000/api/auth/login`, {
           username: self.username,
           password: String(sha256(String(self.password)))
         })

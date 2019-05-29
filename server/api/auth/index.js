@@ -1,7 +1,7 @@
 
 const user = require('../../database/controllers/user')()
 const Router = require('koa-router')
-const jwt = require('koa-jwt')
+const jwtUtil = require('jsonwebtoken')
 
 module.exports = (database) => {
   const auth = new Router()
@@ -18,8 +18,13 @@ module.exports = (database) => {
           delete validated.password
 
           ctx.status = 200
+
+          console.log(require('../../private.json').jwt.key)
           resolve({
-            token: jwt.sign({ user: validated }, require('../private.json').jwt.token),
+            token: jwtUtil.sign({
+              data: validated,
+              exp: Math.floor(Date.now() / 1000) + (60 * 60)
+            }, require('../../private.json').jwt.key),
             message: 'Logged in!'
           })
         } else {
