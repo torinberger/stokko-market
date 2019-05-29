@@ -9,6 +9,7 @@ const authAPI = require('./api/auth')
 const database = require('./database')
 
 const app = new Koa()
+app.use(cors())
 
 app
   .use(jwt({
@@ -37,5 +38,4 @@ api.use('/auth', auth.routes())
 server.use(api.routes(), api.allowedMethods())
 
 app.use(server.routes())
-app.use(cors())
 app.listen(3000)
