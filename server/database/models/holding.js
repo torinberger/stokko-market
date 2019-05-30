@@ -5,6 +5,7 @@ const Schema = mongoose.Schema
 const HoldingSchema = new Schema({
   owner: { type: Schema.Types.ObjectId, ref: 'User' },
   stock: { type: Schema.Types.ObjectId, ref: 'Stock' },
+  purchasePrice: Number,
   amount: Number
 })
 
