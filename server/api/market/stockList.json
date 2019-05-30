@@ -1,6 +1,17 @@
 {
     "stocks": [
         "AAPL",
-        "MSFT"
+        "MSFT",
+        "AES",
+        "GOOGL",
+        "F",
+        "GM",
+        "GD",
+        "GE",
+        "HCP",
+        "HPQ",
+        "INTC",
+        "K",
+        "KMB"
     ]
 }
