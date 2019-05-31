@@ -107,6 +107,9 @@ export default {
             this.$q.notify({ message: 'Succesfully Registered!', color: 'green' })
             self.mode = 'login'
           }
+        }).catch(function (err) {
+          console.log(err)
+          self.$q.notify({ message: 'Username/Password Taken', color: 'red' })
         })
     },
     login () {
