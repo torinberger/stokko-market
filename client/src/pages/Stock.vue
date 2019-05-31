@@ -65,8 +65,15 @@ export default {
         }
       })
       .then((response) => {
-        self.staticStocks = response.data
-        self.stockOptions = response.data
+        console.log(response.data)
+        let stocks = []
+
+        for (let i = 0; i < response.data.length; i++) {
+          stocks.push(response.data[i].symbol)
+        }
+
+        self.staticStocks = stocks
+        self.stockOptions = stocks
       })
   },
   methods: {
