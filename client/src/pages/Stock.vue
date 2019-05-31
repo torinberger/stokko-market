@@ -24,7 +24,7 @@
       </template>
     </q-select>
 
-    <div v-bind:key="currentStock" v-for="currentStock in stocks">
+    <div id="stock-chart-list" v-bind:key="currentStock" v-for="currentStock in stocks">
       <stock-chart :stock="currentStock"></stock-chart>
     </div>
   </div>
@@ -103,5 +103,9 @@ export default {
 </script>
 
 <style scoped>
+
+#stock-chart-list {
+  display: inline-block;
+}
 
 </style>

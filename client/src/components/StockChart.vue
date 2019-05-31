@@ -5,7 +5,7 @@
         <div class="Chart">
           <!-- <h2>{{ stock }}</h2> -->
           <line-chart v-if="ready && !errorMsg" :chartData="chartData"></line-chart>
-          <div class="chart-loading-container" v-if="!ready" style="width: 800px; height: 400px; background: #212733;">
+          <div class="chart-loading-container" v-if="!ready">
             <q-circular-progress
               indeterminate
               size="40px"
@@ -13,7 +13,7 @@
               class="q-ma-md"
             />
           </div>
-          <div v-if="ready && errorMsg" class="chart-err-container" style="width: 800px; height: 400px; background: #212733;">
+          <div v-if="ready && errorMsg" class="chart-err-container">
             {{ errorMsg }}
           </div>
         </div>
@@ -98,9 +98,60 @@ export default {
 </script>
 
 <style>
+
+@media only screen and (max-width: 500px) and (max-height: 820px) {
+  .container {
+    width: 100vw;
+    height: 60vh;
+  }
+
+  #line-chart {
+    width: 100vw !important;
+    height: 60vh !important;
+  }
+
+  .stock-chart {
+    height: 60vh;
+  }
+
+  .chart-err-container {
+    width: 100vw;
+    height: 60vh;
+    background: #212733;
+  }
+
+  .chart-loading-container {
+    width: 100vw;
+    height: 60vh;
+    background: #212733;
+  }
+}
+
+@media not screen and (max-width: 500px) and (max-height: 820px) {
+  .container {
+    width: 50vw;
+  }
+
+  .chart-err-container {
+    width: 800px;
+    height: 400px;
+    background: #212733;
+  }
+
+  .chart-loading-container {
+    width: 800px;
+    height: 400px;
+    background: #212733;
+  }
+}
+
 .container {
-  max-width: 800px;
+  display: inline-block;
   background: #212733;
+}
+
+.stock-chart {
+  display: inline-block;
 }
 
 .chart-loading-container {
