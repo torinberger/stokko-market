@@ -41,6 +41,10 @@ module.exports = (database) => {
     })
   })
 
+  auth.get('/validate', async (ctx) => { // if this route can be reached, JWT would have to not have thrown an auth error
+    ctx.body = 'Validated' // therefore this line will only execute if the caller is authenticated
+  })
+
   auth.post('/create', async (ctx) => {
     const userDetails = ctx.request.body
 
