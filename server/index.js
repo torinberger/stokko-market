@@ -7,6 +7,7 @@ const bodyParser = require('koa-bodyparser')
 
 const marketAPI = require('./api/market')
 const authAPI = require('./api/auth')
+const userAPI = require('./api/users')
 const database = require('./database')
 
 const app = new Koa()
@@ -20,7 +21,8 @@ app
   }).unless({
     path: [
       /^\/api\/auth\/*/,
-      /^\/api\/market\/get\/*/
+      /^\/api\/market\/get\/*/,
+      /^\/api\/users\/get\/*/
     ]
   }))
 
@@ -36,6 +38,10 @@ api.use('/market', market.routes())
 // auth routes
 const auth = authAPI(database)
 api.use('/auth', auth.routes())
+
+// user routes
+const users = userAPI(database)
+api.use('/users', users.routes())
 
 // link api routes
 server.use(api.routes(), api.allowedMethods())
