@@ -28,8 +28,9 @@
       <stock-chart :stock="currentStock"></stock-chart>
     </div>
 
-    <div id="stock-info" v-if="authenticated">
-      <h1>{{ stocks[0] }}</h1>
+    <div id="stock-info" v-if="authenticated && stockMetaData">
+      <h4>{{ stockMetaData.name }}</h4><span>{{ stockMetaData.symbol }}</span>
+      <p>{{ stockMetaData.description }}</p>
     </div>
   </div>
 </template>
@@ -49,6 +50,8 @@ export default {
       stocks: [],
       stockOptions: [],
       staticStocks: [],
+      metaStocks: [],
+      stockMetaData: null,
       authenticated: false
     }
   },
@@ -76,6 +79,7 @@ export default {
           stocks.push(response.data[i].symbol)
         }
 
+        self.metaStocks = response.data
         self.staticStocks = stocks
         self.stockOptions = stocks
       })
@@ -111,6 +115,16 @@ export default {
 
             if (response.data === 'Validated') {
               self.authenticated = true
+
+              console.log(self.metaStocks)
+
+              for (let i = 0; i < self.metaStocks.length; i++) {
+                const target = self.metaStocks[i]
+
+                if (target.symbol === self.stocks[0]) {
+                  self.stockMetaData = target
+                }
+              }
             } else {
               self.authenticated = false
             }
