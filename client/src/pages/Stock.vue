@@ -12,7 +12,7 @@
       @filter="filterFn"
       @new-value="requestStock"
       @input="requestStock"
-      placeholder="Basic autocomplete"
+      placeholder="Search Stocks"
       style="width: 100%;"
     >
       <template v-slot:no-option>
@@ -27,6 +27,10 @@
     <div id="stock-chart-list" v-bind:key="currentStock" v-for="currentStock in stocks">
       <stock-chart :stock="currentStock"></stock-chart>
     </div>
+
+    <div id="stock-info" v-if="authenticated">
+      <h1>{{ stocks[0] }}</h1>
+    </div>
   </div>
 </template>
 
@@ -39,13 +43,13 @@ export default {
   components: {
     StockChart: () => import('../components/StockChart.vue')
   },
-
   data () {
     return {
       model: null,
       stocks: [],
       stockOptions: [],
-      staticStocks: []
+      staticStocks: [],
+      authenticated: false
     }
   },
   created () {
@@ -90,6 +94,30 @@ export default {
         '',
         `/#/stock/${stock}`
       )
+
+      let self = this
+
+      if (self.$store.state.JWTtoken) {
+        axios
+          .get('http://localhost:3000/api/auth/validate', {
+            headers: {
+              'Access-Control-Allow-Origin': '*',
+              'Authorization': 'Bearer ' + self.$store.state.JWTtoken
+            }
+          })
+          .then((response) => {
+            console.log('auth:')
+            console.log(response)
+
+            if (response.data === 'Validated') {
+              self.authenticated = true
+            } else {
+              self.authenticated = false
+            }
+          })
+      } else {
+        self.authenticated = false
+      }
     },
     filterFn (val, update, abort) {
       let self = this
