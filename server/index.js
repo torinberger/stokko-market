@@ -19,7 +19,8 @@ app
     secret: require('./private.json').jwt.key
   }).unless({
     path: [
-      /^\/api\/auth\/*/
+      /^\/api\/auth\/*/,
+      /^\/api\/market\/get\/*/
     ]
   }))
 
