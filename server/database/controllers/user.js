@@ -28,28 +28,8 @@ module.exports = function () {
     async addUser (target) {
       return new User(target).save()
     },
-    async updateUser (id, changeCallback) {
-      return new Promise(function (resolve, reject) {
-        User.findById(id, function (err, data) {
-          if (err) {
-            reject(err)
-          } else {
-            if (data) {
-              changeCallback(data, function (newUser) {
-                new User(newUser).save(function (err, updatedUser) {
-                  if (err) {
-                    reject(err)
-                  } else {
-                    resolve(updatedUser)
-                  }
-                })
-              })
-            } else {
-              reject(new Error('User Not Found'))
-            }
-          }
-        })
-      })
+    async updateUser (id, changes) {
+      return User.findByIDAndUpdate(id, changes)
     }
   }
 }

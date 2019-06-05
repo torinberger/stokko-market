@@ -1,47 +1,35 @@
 const Stock = require('../models/stock')
 
+// Structure
+//  class
+//    .function(params)
+//    .then(callback)
+//    .err(callback)
+
+// Methods
+//  GET -> getStocks ()
+//  GET -> getStockByID (id)
+//  GET -> getStock (target)
+//  ADD -> addStock (target)
+//  PUT -> updateStock (id, changeCallback)
+//    CALLBACK -> changeCallback (stock, save) // within callback, stock is changed in whatever way, then returned with save (stock)
+
 module.exports = function () {
   return {
-    async getStocks (callback) {
-      Stock.find({}, function (err, data) {
-        if (err) {
-          callback(err)
-          throw err
-        } else {
-          callback(data)
-        }
-      })
+    async getStocks () {
+      return Stock.find({}).exec()
     },
-    async getStock (id, callback) {
-      Stock.findById(id, function (err, data) {
-        if (err) {
-          callback(err)
-          throw err
-        } else {
-          callback(data)
-        }
-      })
+    async getStockByID (id) {
+      return Stock.findByID(id).exec()
     },
-    async addStock (body, callback) {
-      new Stock(body).save(function (err, stock) {
-        if (err) {
-          callback(err)
-          throw err
-        } else {
-          console.log('Added new stock to DB')
-          callback(stock)
-        }
-      })
+    async getStock (target) {
+      return Stock.find(target).exec()
     },
-    async updateStock (id, changes, callback) {
-      Stock.updateOne({ _id: id }, changes, function (err) {
-        if (err) {
-          callback(err)
-          throw err
-        } else {
-          callback()
-        }
-      })
+    async addStock (target) {
+      return new Stock(target).save()
+    },
+    async updateStock (id, changes) {
+      return Stock.findByIDAndUpdate(id, changes)
     }
   }
 }

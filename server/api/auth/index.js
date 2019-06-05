@@ -1,5 +1,7 @@
 
-const user = require('../../database/controllers/user')()
+const database = require('../../database')()
+const Response = require('../../utils/responseStandard')
+
 const Router = require('koa-router')
 const jwtUtil = require('jsonwebtoken')
 
@@ -9,40 +11,30 @@ module.exports = (database) => {
   auth.post('/login', async (ctx) => {
     const userDetails = ctx.request.body
 
-    ctx.body = await new Promise(function (resolve, reject) {
+    await database
+      .user()
+      .getUser(userDetails)
+      .then((user) => {
 
-      console.log('Request to login user:')
-      console.log(userDetails)
-
-      user.validateUser(userDetails, (validated) => {
-        console.log('Request to validate user:')
-        console.log(validated)
-
-        if (validated) {
-          let exportUser = validated
+        if(user === null) {
+          ctx.body = new Response('err', 'Incorrect Username/Password')
+        } else {
+          let exportUser = user
           delete exportUser.password
 
-          console.log(exportUser)
-
-          ctx.status = 200
-
-          console.log(require('../../private.json').jwt.key)
-          resolve({
-            token: jwtUtil.sign({ username: validated.username, password: validated.password }, require('../../private.json').jwt.key),
+          ctx.body = new Response('success', {
+            token: jwtUtil.sign({ username: user.username, password: user.password }, require('../../private.json').jwt.key),
             user: exportUser
-          })
-        } else {
-          ctx.status = 401
-          resolve({
-            message: 'Auth Err!'
           })
         }
       })
-    })
+      .catch((err) => {
+        ctx.body = new Response('err', err)
+      })
   })
 
   auth.get('/validate', async (ctx) => { // if this route can be reached, JWT would have to not have thrown an auth error
-    ctx.body = 'Validated' // therefore this line will only execute if the caller is authenticated
+    ctx.body = new Response('success', 'Validated') // therefore this line will only execute if the caller is authenticated
   })
 
   auth.post('/create', async (ctx) => {
@@ -52,17 +44,18 @@ module.exports = (database) => {
     console.log(userDetails)
 
     if (!userDetails.username || !userDetails.password) {
-      ctx.body = 'Missing Register Details!'
-      return
+      ctx.body = new Response('err', 'Missing Register Details!')
+    } else {
+      await database
+        .user()
+        .addUser(userDetails)
+        .then((newUser) => {
+          ctx.body = new Response('success', 'Successfully Registered')
+        })
+        .catch((err) => {
+          ctx.body = new Response('err', err)
+        })
     }
-
-    ctx.body = await new Promise(function (resolve, reject) {
-      user.addUser(userDetails, (newUser) => {
-        console.log('Added new user:')
-        console.log(newUser)
-        resolve(newUser)
-      })
-    })
   })
 
   return (auth)

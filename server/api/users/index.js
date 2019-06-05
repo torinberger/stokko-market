@@ -2,6 +2,7 @@
 const Router = require('koa-router')
 
 const database = require('../../database')()
+const Response = require('../../utils/responseStandard')
 
 module.exports = () => {
   const users = new Router()
@@ -9,25 +10,28 @@ module.exports = () => {
   users.get('/get/user/:id', async (ctx) => {
     let userID = ctx.params.id
 
-    ctx.body = await new Promise(function (resolve, reject) {
-      database.user().getUser(userID, function (user) {
-        if (user === null) {
-          resolve({ type: 'err', msg: 'User not found' })
-          return
-        }
-        console.log(user)
-        delete user.password
-        resolve(user)
+    await database
+      .user()
+      .getUserByID(userID)
+      .then((user) => {
+        ctx.body = new Response('success', user)
       })
-    })
+      .catch((err) => {
+        ctx.body = new Response('err', err)
+      })
+
   })
 
   users.get('/get/users', async (ctx) => {
-    ctx.body = await new Promise(function (resolve, reject) {
-      database.user().getUsers(function (user) {
-        resolve(user)
+    await database
+      .user()
+      .getUsers()
+      .then((users) => {
+        ctx.body = new Response('success', users)
       })
-    })
+      .catch((err) => {
+        ctx.body = new Response('err', err)
+      })
   })
 
   return (users)
