@@ -65,7 +65,7 @@ export default {
     let self = this
 
     axios
-      .get(`http://localhost:3000/api/market/get/stocklist`, {
+      .get(`http://localhost:3000/api/market/get/stocks`, {
         headers: {
           'Access-Control-Allow-Origin': '*',
           'Authorization': 'Bearer ' + self.$store.state.JWTtoken

@@ -1,6 +1,4 @@
 
-const Response = require('../../utils/responseStandard')
-
 const Router = require('koa-router')
 const jwtUtil = require('jsonwebtoken')
 
@@ -17,26 +15,28 @@ module.exports = (database) => {
       .getUser(userDetails)
       .then((user) => {
         if(user.length === 0) {
-          ctx.body = new Response('err', 'Incorrect Username/Password')
+          ctx.status = 401
+          ctx.body = 'Incorrect Username/Password'
         } else {
           user = user[0]
-          
-          let exportUser = user
-          delete exportUser.password
 
-          ctx.body = new Response('success', {
+          ctx.status = 200
+          ctx.body = {
             token: jwtUtil.sign({ username: user.username, password: user.password }, require('../../private.json').jwt.key),
-            user: exportUser
-          })
+            user
+          }
         }
       })
       .catch((err) => {
-        ctx.body = new Response('err', err)
+        console.log(err)
+        ctx.status = 500
+        ctx.body = 'Server Error!'
       })
   })
 
   auth.get('/validate', async (ctx) => { // if this route can be reached, JWT would have to not have thrown an auth error
-    ctx.body = new Response('success', 'Validated') // therefore this line will only execute if the caller is authenticated
+    ctx.status = 200
+    ctx.body = 'Validated' // therefore this line will only execute if the caller is authenticated
   })
 
   auth.post('/create', async (ctx) => {
@@ -52,10 +52,19 @@ module.exports = (database) => {
         .user()
         .addUser(userDetails)
         .then((newUser) => {
-          ctx.body = new Response('success', 'Successfully Registered')
+          let exportUser = newUser
+          delete exportUser.password
+
+          ctx.status = 200
+          ctx.body = {
+            token: jwtUtil.sign({ username: newUser.username, password: newUser.password }, require('../../private.json').jwt.key),
+            user: exportUser
+          }
         })
         .catch((err) => {
-          ctx.body = new Response('err', err)
+          console.log(err)
+          ctx.status = 500
+          ctx.body = 'Server Error!'
         })
     }
   })

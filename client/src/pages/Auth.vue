@@ -101,15 +101,18 @@ export default {
         .then((response) => {
           console.log(response)
 
-          // if (response.data === 'Missing Register Details!') {
-          //   this.$q.notify({ message: 'Missing Register Details!', color: 'red' })
-          // } else {
-          //   this.$q.notify({ message: 'Succesfully Registered!', color: 'green' })
-          //   self.mode = 'login'
-          // }
+          if (!response.data || !response.data.token) {
+            this.$q.notify({ message: 'Uknown Error!', color: 'orange' })
+          } else {
+            this.$q.notify({ message: 'Succesfully Registered!', color: 'green' })
+
+            this.$store.commit('setJWTtoken', response.data.token)
+            console.log(this.$store.state.JWTtoken)
+          }
         }).catch(function (err) {
           console.log(err)
-          // self.$q.notify({ message: 'Username/Password Taken', color: 'red' })
+          self.$q.notify({ message: 'Username/Password Taken', color: 'red' })
+          this.password = ''
         })
     },
     login () {
@@ -129,17 +132,18 @@ export default {
         .then((response) => {
           console.log(response)
 
-          // if (!response.data) {
-          //   this.$q.notify({ message: 'Incorrect Username/Password!', color: 'red' })
-          // } else {
-          //   this.$q.notify({ message: 'Succesfully Logged In!', color: 'green' })
-          //
-          //   this.$store.commit('setJWTtoken', response.data.token)
-          //   console.log(this.$store.state.JWTtoken)
-          // }
+          if (!response.data || !response.data.token) {
+            this.$q.notify({ message: 'Uknown Error!', color: 'orange' })
+          } else {
+            this.$q.notify({ message: 'Succesfully Logged In!', color: 'green' })
+
+            this.$store.commit('setJWTtoken', response.data.token)
+            console.log(this.$store.state.JWTtoken)
+          }
         }).catch(function (err) {
           console.log(err)
-          // self.$q.notify({ message: 'Incorrect Username/Password!', color: 'red' })
+          self.$q.notify({ message: 'Incorrect Username/Password!', color: 'red' })
+          this.password = null
         })
     }
   }

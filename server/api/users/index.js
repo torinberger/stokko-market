@@ -13,6 +13,7 @@ module.exports = (database) => {
       .user()
       .getUserByID(userID)
       .then((user) => {
+        delete user.password
         ctx.body = new Response('success', user)
       })
       .catch((err) => {
