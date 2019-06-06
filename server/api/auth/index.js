@@ -16,10 +16,11 @@ module.exports = (database) => {
       .user()
       .getUser(userDetails)
       .then((user) => {
-
-        if(user === null) {
+        if(user.length === 0) {
           ctx.body = new Response('err', 'Incorrect Username/Password')
         } else {
+          user = user[0]
+          
           let exportUser = user
           delete exportUser.password
 
