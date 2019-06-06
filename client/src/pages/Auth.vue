@@ -143,7 +143,7 @@ export default {
         }).catch(function (err) {
           console.log(err)
           self.$q.notify({ message: 'Incorrect Username/Password!', color: 'red' })
-          this.password = null
+          self.password = null
         })
     }
   }
