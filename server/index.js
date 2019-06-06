@@ -8,7 +8,7 @@ const bodyParser = require('koa-bodyparser')
 const marketAPI = require('./api/market')
 const authAPI = require('./api/auth')
 const userAPI = require('./api/users')
-const database = require('./database')
+const database = require('./database')()
 
 const app = new Koa()
 app

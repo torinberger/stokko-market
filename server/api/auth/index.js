@@ -1,5 +1,4 @@
 
-const database = require('../../database')()
 const Response = require('../../utils/responseStandard')
 
 const Router = require('koa-router')
@@ -10,6 +9,8 @@ module.exports = (database) => {
 
   auth.post('/login', async (ctx) => {
     const userDetails = ctx.request.body
+
+    console.log(database);
 
     await database
       .user()

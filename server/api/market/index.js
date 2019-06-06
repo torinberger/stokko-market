@@ -2,7 +2,6 @@
 const axios = require('axios')
 const Router = require('koa-router')
 
-const database = require('../../database')()
 const Response = require('../../utils/responseStandard')
 
 module.exports = () => {

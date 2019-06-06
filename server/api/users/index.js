@@ -1,10 +1,9 @@
 
 const Router = require('koa-router')
 
-const database = require('../../database')()
 const Response = require('../../utils/responseStandard')
 
-module.exports = () => {
+module.exports = (database) => {
   const users = new Router()
 
   users.get('/get/user/:id', async (ctx) => {
