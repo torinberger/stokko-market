@@ -21,17 +21,24 @@ module.exports = (database) => {
           ctx.status = 404
           ctx.body = 'Stock Not Found!'
         } else {
-          stock = stock[0]
+          let stockData = stock[0]
 
           await axios
-            .get(`https://www.quandl.com/api/v3/datasets/WIKI/${stock}/data.json?api_key=${serverPrivate.api.key}&collapse=quarterly&start_date=2000-01-01`)
+            .get(`https://www.quandl.com/api/v3/datasets/WIKI/${stockData.symbol}/data.json?api_key=${serverPrivate.api.key}&collapse=quarterly&start_date=2000-01-01`)
             .then(function (response) {
-              stock.history = response.data
+              let history = response.data
+              console.log('history:\n', history)
+              
+              stockData.history = JSON.stringify(response.data.dataset_data)
+              console.log('stockdata:\n', stockData);
 
-              ctx.satus = 200
-              ctx.body = stock
+              console.log(stockData.history)
+
+              ctx.status = 200
+              ctx.body = stockData
             })
-            .catch(function (e) {
+            .catch(function (err) {
+              console.log(err)
               ctx.status = 404
               ctx.body = 'Stock Not Found!'
             })
