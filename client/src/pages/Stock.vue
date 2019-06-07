@@ -24,12 +24,12 @@
       </template>
     </q-select>
 
-    <div id="stock-chart-list" v-bind:key="currentStock" v-for="currentStock in stocks">
+    <div id="stock-chart-list" v-bind:key="currentStock" v-for="currentStock in stocks" elevated>
       <stock-chart :stock="currentStock"></stock-chart>
     </div>
 
     <div id="stock-info" v-if="authenticated && stockMetaData">
-      <h4>{{ stockMetaData.name }}</h4><span>{{ stockMetaData.symbol }}</span>
+      <h4>{{ stockMetaData.name }}<span> {{ stockMetaData.symbol }}</span></h4>
       <p>{{ stockMetaData.description }}</p>
     </div>
   </div>
@@ -147,7 +147,32 @@ export default {
 <style scoped>
 
 #stock-chart-list {
+  margin: auto;
+  margin: 1vh;
   display: inline-block;
+}
+
+#stock-info {
+  background: lightgrey;
+  display: inline-block;
+  width: calc(50vw - 3vh);
+  float: right;
+  margin: 1vh;
+  margin-left: 0;
+  background: #212733;
+}
+
+#stock-info h4 {
+  margin: 1vh;
+  width: auto;
+  color: white;
+}
+
+#stock-info span {
+  margin: 0.5vh;
+  font-size: 2vh;
+  color: lightgrey;
+  width: auto;
 }
 
 </style>

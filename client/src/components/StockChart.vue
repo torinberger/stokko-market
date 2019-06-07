@@ -133,13 +133,13 @@ export default {
   }
 
   .chart-err-container {
-    width: 800px;
+    width: 50vw;
     height: 400px;
     background: #212733;
   }
 
   .chart-loading-container {
-    width: 800px;
+    width: 50vw;
     height: 400px;
     background: #212733;
   }
