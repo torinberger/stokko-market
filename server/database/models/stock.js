@@ -6,8 +6,7 @@ const StockSchema = new Schema({
   name: String,
   symbol: String,
   description: String,
-  owner: { type: Schema.Types.ObjectId, ref: 'User' },
-  value: Number
+  owner: { type: Schema.Types.ObjectId, ref: 'User' }
 })
 
 // Create model
