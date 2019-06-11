@@ -65,5 +65,34 @@ module.exports = (database) => {
       })
   })
 
+  market.post('/buy/stock/:stock', async (ctx) => {
+    let userDetails = ctx.request.body
+    let stockSymbol = ctx.params.stock
+
+    await axios
+      .get(`https://www.quandl.com/api/v3/datasets/WIKI/${stockSymbol}/data.json?api_key=${serverPrivate.api.key}&collapse=quarterly&start_date=2000-01-01`)
+      .then(async function (response) {
+        let history = response.data
+
+        await database
+          .user()
+          .getUser(userDetails)
+          .then(function (user) {
+            user = user[0]
+
+            
+          })
+          .catch(function (err) {
+            ctx.status = 500
+            ctx.body = err
+          })
+      })
+      .catch(function (err) {
+        console.log(err)
+        ctx.status = 404
+        ctx.body = 'Stock Not Found!'
+      })
+  })
+
   return (market)
 }
