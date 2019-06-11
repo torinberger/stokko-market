@@ -28,9 +28,12 @@
       <stock-chart :stock="currentStock"></stock-chart>
     </div>
 
-    <div id="stock-info" v-if="authenticated && stockMetaData">
+    <div id="stock-info" v-if="stockMetaData">
       <h4>{{ stockMetaData.name }}<span> {{ stockMetaData.symbol }}</span></h4>
       <p>{{ stockMetaData.description }}</p>
+      <div id="stock-interactions" v-if='authenticated'>
+        <button type="button" name="buy">Buy</button>
+      </div>
     </div>
   </div>
 </template>
@@ -101,6 +104,16 @@ export default {
 
       let self = this
 
+      console.log(self.metaStocks)
+
+      for (let i = 0; i < self.metaStocks.length; i++) {
+        const target = self.metaStocks[i]
+
+        if (target.symbol === self.stocks[0]) {
+          self.stockMetaData = target
+        }
+      }
+
       if (self.$store.state.JWTtoken) {
         axios
           .get('http://localhost:3000/api/auth/validate', {
@@ -115,16 +128,6 @@ export default {
 
             if (response.data === 'Validated') {
               self.authenticated = true
-
-              console.log(self.metaStocks)
-
-              for (let i = 0; i < self.metaStocks.length; i++) {
-                const target = self.metaStocks[i]
-
-                if (target.symbol === self.stocks[0]) {
-                  self.stockMetaData = target
-                }
-              }
             } else {
               self.authenticated = false
             }
