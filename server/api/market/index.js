@@ -65,8 +65,6 @@ module.exports = (database) => {
   })
 
   market.post('/buy/stock/:stock', async (ctx) => {
-
-    console.log('GETTEN')
     let postData = ctx.request.body
     let { holdingData } = postData
     let { userData } = postData

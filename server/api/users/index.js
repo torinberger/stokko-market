@@ -19,7 +19,6 @@ module.exports = (database) => {
       .catch((err) => {
         ctx.body = new Response('err', err)
       })
-
   })
 
   users.get('/get/users', async (ctx) => {
