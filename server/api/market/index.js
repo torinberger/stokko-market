@@ -90,11 +90,25 @@ module.exports = (database) => {
               await database
                 .holding()
                 .addHolding(holdingData)
-                .then(function (newHolding) {
+                .then(async function (newHolding) {
                   console.log('holding added')
                   console.log(newHolding)
-                  ctx.status = 200
-                  ctx.body = newHolding
+
+                  await database
+                    .user()
+                    .updateUser(user._id, {
+                      $push: { holdings: newHolding._id }
+                    })
+                    .then(function (updatedUser) {
+                      console.log(updatedUser)
+                      ctx.status = 200
+                      ctx.body = newHolding
+                    })
+                    .catch(function (err) {
+                      console.log(err)
+                      ctx.status = 500
+                      ctx.body = 'Error in Adding Holding to User!'
+                    })
                 })
                 .catch(function (err) {
                   console.log(err)

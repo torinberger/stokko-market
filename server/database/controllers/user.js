@@ -29,7 +29,7 @@ module.exports = function () {
       return new User(target).save()
     },
     async updateUser (id, changes) {
-      return User.findByIDAndUpdate(id, changes)
+      return User.updateOne({ _id: id }, changes)
     }
   }
 }
