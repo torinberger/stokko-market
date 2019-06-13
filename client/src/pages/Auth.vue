@@ -107,7 +107,9 @@ export default {
             this.$q.notify({ message: 'Succesfully Registered!', color: 'green' })
 
             this.$store.commit('setJWTtoken', response.data.token)
+            this.$store.commit('setUser', response.data.user._id)
             console.log(this.$store.state.JWTtoken)
+            console.log(this.$store.state.user)
           }
         }).catch(function (err) {
           console.log(err)
@@ -138,7 +140,9 @@ export default {
             this.$q.notify({ message: 'Succesfully Logged In!', color: 'green' })
 
             this.$store.commit('setJWTtoken', response.data.token)
+            this.$store.commit('setUser', response.data.user._id)
             console.log(this.$store.state.JWTtoken)
+            console.log(this.$store.state.user)
           }
         }).catch(function (err) {
           console.log(err)

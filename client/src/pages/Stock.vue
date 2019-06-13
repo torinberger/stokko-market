@@ -32,7 +32,7 @@
       <h4>{{ stockMetaData.name }}<span> {{ stockMetaData.symbol }}</span></h4>
       <p>{{ stockMetaData.description }}</p>
       <div id="stock-interactions" v-if='authenticated'>
-        <button type="button" name="buy">Buy</button>
+        <button type="button" @click="buyStock" name="buy">Buy</button>
       </div>
     </div>
   </div>
@@ -68,7 +68,7 @@ export default {
     let self = this
 
     axios
-      .get(`http://localhost:3000/api/market/get/stocks`, {
+      .get(`http://localhost:3000/api/market/get/stocks/`, {
         headers: {
           'Access-Control-Allow-Origin': '*',
           'Authorization': 'Bearer ' + self.$store.state.JWTtoken
@@ -142,6 +142,25 @@ export default {
         const needle = val.toLowerCase()
         this.stockOptions = self.staticStocks.filter(v => v.toLowerCase().indexOf(needle) > -1)
       })
+    },
+    buyStock () {
+      axios
+        .post(`http://localhost:3000/api/market/buy/stock/${this.stocks[0]}`, {
+          holding: {
+            amount: 1,
+            stockID: this.stockMetaData._id
+          },
+          user: this.$store.state.user
+        },
+        {
+          headers: {
+            'Access-Control-Allow-Origin': '*',
+            'Authorization': 'Bearer ' + this.$store.state.JWTtoken
+          }
+        })
+        .then(function (response) {
+          console.log(response)
+        })
     }
   }
 }

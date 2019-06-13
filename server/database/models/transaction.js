@@ -3,6 +3,7 @@ const Schema = mongoose.Schema
 
 // Create schema
 const TransactionSchema = new Schema({
+  user: { type: Schema.Types.ObjectId, ref: 'User' },
   stock: { type: Schema.Types.ObjectId, ref: 'Stock' },
   price: Number,
   date: String,

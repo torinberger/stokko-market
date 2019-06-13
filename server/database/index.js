@@ -20,6 +20,7 @@ module.exports = function () {
   return {
     user: require('./controllers/user.js'),
     stock: require('./controllers/stock.js'),
-    holding: require('./controllers/holding.js')
+    holding: require('./controllers/holding.js'),
+    transaction: require('./controllers/transaction.js')
   }
 }

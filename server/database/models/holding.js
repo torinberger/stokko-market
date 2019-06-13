@@ -3,6 +3,7 @@ const Schema = mongoose.Schema
 
 // Create schema
 const HoldingSchema = new Schema({
+  user: { type: Schema.Types.ObjectId, ref: 'User' },
   stock: { type: Schema.Types.ObjectId, ref: 'Stock' },
   amount: Number
 })

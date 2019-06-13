@@ -16,11 +16,15 @@ export default function (/* { ssrContext } */) {
       // example
     },
     state: {
-      JWTtoken: ''
+      JWTtoken: '',
+      user: ''
     },
     mutations: {
       setJWTtoken (state, token) {
         state.JWTtoken = token
+      },
+      setUser (state, id) {
+        state.user = id
       }
     },
     // enable strict mode (adds overhead!)

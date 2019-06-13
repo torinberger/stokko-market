@@ -27,8 +27,8 @@ module.exports = function () {
     async addHolding (target) {
       return new Holding(target).save()
     },
-    async updateHolding (id, changes) {
-      return Holding.updateOne({ _id: id }, changes)
+    async updateOrAddHolding (user, stock, changes) {
+      return Holding.update({ user, stock }, changes, { upsert: true })
     }
   }
 }
