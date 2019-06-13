@@ -11,8 +11,7 @@ const Stock = require('../models/stock')
 //  GET -> getStockByID (id)
 //  GET -> getStock (target)
 //  ADD -> addStock (target)
-//  PUT -> updateStock (id, changeCallback)
-//    CALLBACK -> changeCallback (stock, save) // within callback, stock is changed in whatever way, then returned with save (stock)
+//  PUT -> updateHolding (id, changes)
 
 module.exports = function () {
   return {
@@ -29,7 +28,7 @@ module.exports = function () {
       return new Stock(target).save()
     },
     async updateStock (id, changes) {
-      return Stock.findByIDAndUpdate(id, changes)
+      return Stock.updateOne({ _id: id }, changes)
     }
   }
 }

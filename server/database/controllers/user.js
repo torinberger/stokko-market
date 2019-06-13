@@ -11,8 +11,7 @@ const User = require('../models/user')
 //  GET -> getUserByID (id)
 //  GET -> getUser (target)
 //  ADD -> addUser (target)
-//  PUT -> updateUser (id, changeCallback)
-//    CALLBACK -> changeCallback (user, save) // within callback, user is changed in whatever way, then returned with save (user)
+//  PUT -> updateHolding (id, changes)
 
 module.exports = function () {
   return {

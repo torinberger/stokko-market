@@ -11,8 +11,7 @@ const Holding = require('../models/holding')
 //  GET -> getHoldingByID (id)
 //  GET -> getHolding (target)
 //  ADD -> addHolding (target)
-//  PUT -> updateHolding (id, changeCallback)
-//    CALLBACK -> changeCallback (holding, save) // within callback, holding is changed in whatever way, then returned with save (holding)
+//  PUT -> updateHolding (id, changes)
 
 module.exports = function () {
   return {
@@ -29,7 +28,7 @@ module.exports = function () {
       return new Holding(target).save()
     },
     async updateHolding (id, changes) {
-      return Holding.findByIDAndUpdate(id, changes)
+      return Holding.updateOne({ _id: id }, changes)
     }
   }
 }
