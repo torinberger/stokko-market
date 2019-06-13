@@ -118,6 +118,7 @@ module.exports = (database) => {
             }
           })
           .catch(function (err) {
+            console.log(err)
             ctx.status = 500
             ctx.body = err
           })
