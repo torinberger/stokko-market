@@ -8,8 +8,6 @@ module.exports = (database) => {
   auth.post('/login', async (ctx) => {
     const userDetails = ctx.request.body
 
-    console.log(database);
-
     await database
       .user()
       .getUser(userDetails)
