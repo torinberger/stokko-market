@@ -32,7 +32,19 @@
       <h4>{{ stockMetaData.name }}<span> {{ stockMetaData.symbol }}</span></h4>
       <p>{{ stockMetaData.description }}</p>
       <div id="stock-interactions" v-if='authenticated'>
-        <button type="button" @click="buyStock" name="buy">Buy</button>
+        <q-btn label="Alert" color="primary" @click="alert = true" />
+
+        <q-dialog v-model="alert">
+          <q-card>
+            <q-card-section>
+              <div class="text-h6">Alert</div>
+            </q-card-section>
+
+            <q-card-actions align="right">
+              <q-input type="number" filled v-model="amountToBuy"></q-input> <q-btn @click="buyStock" name="buy">Buy</q-btn>
+            </q-card-actions>
+          </q-card>
+        </q-dialog>
       </div>
     </div>
   </div>
@@ -54,6 +66,8 @@ export default {
       stockOptions: [],
       staticStocks: [],
       metaStocks: [],
+      amountToBuy: 1,
+      alert: false,
       stockMetaData: null,
       authenticated: false
     }
@@ -147,7 +161,7 @@ export default {
       axios
         .post(`http://localhost:3000/api/market/buy/stock/${this.stocks[0]}`, {
           holding: {
-            amount: 1,
+            amount: this.amountToBuy,
             stockID: this.stockMetaData._id
           },
           user: this.$store.state.user

@@ -64,6 +64,18 @@ module.exports = (database) => {
       })
   })
 
+  market.get('/get/holdings/:user', async (ctx) => {
+    let userID = ctx.params.stock
+
+    await database
+      .holding()
+      .getHolding({ user: userID })
+      .then((holdings) => {
+        ctx.status = 200
+        ctx.body = holdings
+      })
+  })
+
   market.post('/buy/stock/:stock', async (ctx) => {
     let postData = ctx.request.body
     let { holding } = postData // { amount, stockID }
@@ -75,17 +87,24 @@ module.exports = (database) => {
       .then(async function (response) {
         let stockPrice = response.data.dataset_data.data[0][11]
 
-        // await database
-        //   .transaction()
-        //   .add()
-        //   .then(async (reponse) => {
-        //     console.log(response)
-        //   })
+        await database
+          .transaction()
+          .addTransaction({
+            user,
+            stock: holding.stockID,
+            price: stockPrice,
+            date: new Date().getTime(),
+            type: 'buy',
+            amount: holding.amount
+          })
+          .then(async (addedTransaction) => {
+            console.log(addedTransaction)
+          })
         await database
           .holding()
           .updateOrAddHolding(user, holding.stockID, { $inc: { 'amount': holding.amount } })
-          .then((reponse) => {
-            console.log(response)
+          .then((updatedHolding) => {
+            console.log(updatedHolding)
             ctx.body = 'wonky'
           })
       })
