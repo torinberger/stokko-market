@@ -158,6 +158,7 @@ export default {
       })
     },
     buyStock () {
+      console.log(this.stocks[0])
       axios
         .post(`http://localhost:3000/api/market/buy/stock/${this.stocks[0]}`, {
           holding: {
@@ -174,6 +175,10 @@ export default {
         })
         .then(function (response) {
           console.log(response)
+        })
+        .catch((err) => {
+          console.log('err thwon here')
+          console.log(err)
         })
     }
   }
