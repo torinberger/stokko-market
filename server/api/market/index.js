@@ -128,7 +128,7 @@ module.exports = (database) => {
                     ctx.body = 'wonky'
                   })
               } else {
-                ctx.status = 401
+                ctx.status = 400
                 ctx.body = 'Not Enough Money in Balance!'
               }
 

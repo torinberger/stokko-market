@@ -158,7 +158,8 @@ export default {
       })
     },
     buyStock () {
-      console.log(this.stocks[0])
+      let self = this
+
       axios
         .post(`http://localhost:3000/api/market/buy/stock/${this.stocks[0]}`, {
           holding: {
@@ -175,10 +176,15 @@ export default {
         })
         .then(function (response) {
           console.log(response)
+          self.$q.notify({ message: 'Stock bought succesfully!', color: 'green' })
         })
         .catch((err) => {
-          console.log('err thwon here')
           console.log(err)
+          let errCode = err.message.split(' ')[err.message.split(' ').length - 1]
+
+          if (errCode === '400') {
+            self.$q.notify({ message: 'You do not have enough money!', color: 'red' })
+          }
         })
     }
   }
