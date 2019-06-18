@@ -34,6 +34,8 @@
       <div id="stock-interactions" v-if='authenticated'>
         <q-btn label="Alert" color="primary" @click="alert = true" />
 
+        <p v-if="userHolding">You own {{ userHolding.amount }} holdings of this stock.</p>
+
         <q-dialog v-model="alert">
           <q-card>
             <q-card-section>
@@ -66,7 +68,7 @@ export default {
       stockOptions: [],
       staticStocks: [],
       metaStocks: [],
-      userHoldings: [],
+      userHolding: null,
       amountToBuy: 1,
       alert: false,
       stockMetaData: null,
@@ -148,8 +150,18 @@ export default {
                 .get(`http://localhost:3000/api/market/get/holdings/${this.$store.state.user}`)
                 .then((holdings) => {
                   console.log('Holdings ', holdings.data)
-                  console.log(this.$store.state.user)
-                  self.userHoldings = holdings
+                  console.log(self.$store.state.user)
+
+                  console.log(self.stockMetaData)
+                  let userHoldings = holdings.data
+
+                  for (var i = 0; i < userHoldings.length; i++) {
+                    console.log(userHoldings[i]._id, self.stockMetaData._id)
+                    if (userHoldings[i].stock === self.stockMetaData._id) {
+                      console.log('User owns current stock!')
+                      self.userHolding = userHoldings[i]
+                    }
+                  }
                 })
             } else {
               self.authenticated = false
@@ -168,6 +180,8 @@ export default {
     },
     buyStock () {
       let self = this
+
+      console.log('biyung stock of id ', this.stockMetaData._id)
 
       axios
         .post(`http://localhost:3000/api/market/buy/stock/${this.stocks[0]}`, {
