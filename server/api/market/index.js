@@ -65,7 +65,7 @@ module.exports = (database) => {
   })
 
   market.get('/get/holdings/:user', async (ctx) => {
-    let userID = ctx.params.stock
+    let userID = ctx.params.user
 
     await database
       .holding()
