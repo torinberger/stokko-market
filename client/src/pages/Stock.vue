@@ -66,6 +66,7 @@ export default {
       stockOptions: [],
       staticStocks: [],
       metaStocks: [],
+      userHoldings: [],
       amountToBuy: 1,
       alert: false,
       stockMetaData: null,
@@ -99,6 +100,16 @@ export default {
         self.metaStocks = response.data
         self.staticStocks = stocks
         self.stockOptions = stocks
+      })
+
+    if() // test if authenticated
+
+    axios
+      .get(`http://localhost:3000/api/market/get/holdings/${this.$store.state.user}`)
+      .then((holdings) => {
+        console.log('Holdings')
+        console.log(holdings)
+        self.userHoldings = holdings
       })
   },
   methods: {
