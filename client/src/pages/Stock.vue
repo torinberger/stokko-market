@@ -101,16 +101,6 @@ export default {
         self.staticStocks = stocks
         self.stockOptions = stocks
       })
-
-    if() // test if authenticated
-
-    axios
-      .get(`http://localhost:3000/api/market/get/holdings/${this.$store.state.user}`)
-      .then((holdings) => {
-        console.log('Holdings')
-        console.log(holdings)
-        self.userHoldings = holdings
-      })
   },
   methods: {
     requestStock (input) {
@@ -153,6 +143,14 @@ export default {
 
             if (response.data === 'Validated') {
               self.authenticated = true
+
+              axios
+                .get(`http://localhost:3000/api/market/get/holdings/${this.$store.state.user}`)
+                .then((holdings) => {
+                  console.log('Holdings ', holdings.data)
+                  console.log(this.$store.state.user)
+                  self.userHoldings = holdings
+                })
             } else {
               self.authenticated = false
             }
