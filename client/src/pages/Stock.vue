@@ -32,9 +32,10 @@
       <h4>{{ stockMetaData.name }}<span> {{ stockMetaData.symbol }}</span></h4>
       <p>{{ stockMetaData.description }}</p>
       <div id="stock-interactions" v-if='authenticated'>
-        <q-btn label="Alert" color="primary" @click="alert = true" />
+        <q-btn label="Buy" color="primary" @click="alert = true" />
+        <q-btn label="Sell" color="primary" @click="alert = true" />
 
-        <p v-if="userHolding">You own {{ userHolding.amount }} holdings of this stock.</p>
+        <p v-if="userHolding">You own {{ userHolding.amount }} shares of this stock.</p>
 
         <q-dialog v-model="alert">
           <q-card>
