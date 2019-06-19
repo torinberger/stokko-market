@@ -117,6 +117,9 @@ export default {
         self.metaStocks = response.data
         self.staticStocks = stocks
         self.stockOptions = stocks
+
+        self.requestStock(this.stocks[0])
+        console.log('STOCK ', this.stocks[0])
       })
   },
   methods: {
