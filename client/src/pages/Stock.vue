@@ -76,18 +76,18 @@ export default {
   },
   data () {
     return {
-      stockSearch: null,
-      stocks: [],
-      stockOptions: [],
-      staticOptions: [],
-      metaStocks: [],
-      userHolding: null,
-      amountToBuy: 1,
-      maxToSell: 0,
-      alertBuy: false,
-      alertSell: false,
-      stockMetaData: null,
-      authenticated: false
+      stockSearch: null, // string holder for the stock search bar
+      stocks: [], // list containing one stock symbol (current stock) (used to force refreshes)
+      stockOptions: [], // used for stock search
+      staticOptions: [], // used for stock search
+      stocksMetaData: [], // meta data { symbol, description, etc } for all stocks
+      userHolding: null, // current holding of stock user is observing
+      amountToBuy: 1, // amount the user is attemping to buy
+      maxToSell: 0, // maximum amount of the current stock a user can sell
+      alertBuy: false, // buy popup
+      alertSell: false, // sell popup
+      stockMetaData: null, // meta data for current stock { symbol, desc, etc }
+      authenticated: false // boolean for whether the user is logged in or not
     }
   },
   created () {
@@ -114,7 +114,7 @@ export default {
           stocks.push(response.data[i].symbol)
         }
 
-        self.metaStocks = response.data
+        self.stocksMetaData = response.data
         self.stockOptions = self.staticOptions = stocks
 
         if (self.stocks.length !== 0) {
@@ -139,8 +139,8 @@ export default {
 
       let self = this
 
-      for (let i = 0; i < self.metaStocks.length; i++) {
-        const target = self.metaStocks[i]
+      for (let i = 0; i < self.stocksMetaData.length; i++) {
+        const target = self.stocksMetaData[i]
 
         if (target.symbol === self.stocks[0]) {
           self.stockMetaData = target
