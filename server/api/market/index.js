@@ -96,8 +96,6 @@ module.exports = (database) => {
           .then(async (targetUser) => {
             targetUser = targetUser[0]
 
-            console.log()
-
             if(targetUser !== undefined) {
               let price = stockPrice * holding.amount
 
@@ -131,6 +129,86 @@ module.exports = (database) => {
                 ctx.status = 400
                 ctx.body = 'Not Enough Money in Balance!'
               }
+
+            } else {
+              ctx.status = 404
+              ctx.body = 'User Not Found!'
+            }
+          })
+      })
+      .catch(function (err) {
+        console.log(err)
+        ctx.status = 404
+        ctx.body = 'Stock Not Found!'
+      })
+  })
+
+  market.post('/sell/stock/:stock', async (ctx) => {
+    let postData = ctx.request.body
+    let { holding } = postData // { amount, stockID }
+    let { user } = postData // user ID
+    let stockSymbol = ctx.params.stock
+    console.log(stockSymbol)
+
+    await axios
+      .get(`https://www.quandl.com/api/v3/datasets/WIKI/${stockSymbol}/data.json?api_key=${serverPrivate.api.key}&collapse=quarterly&start_date=2000-01-01`)
+      .then(async function (response) {
+        let stockPrice = response.data.dataset_data.data[0][11]
+
+        console.log('stock price ', stockPrice)
+
+        await database
+          .user()
+          .getUser({ _id: user })
+          .then(async (targetUser) => {
+            targetUser = targetUser[0]
+
+            if(targetUser !== undefined) {
+
+              await database
+                .holding()
+                .getHolding({ user: user })
+                .then(async (holdings) => {
+
+                  for (var i = 0; i < holdings.length; i++) {
+                    if (holdings[i].user == user) {
+                      let currentAmount = holdings[i].amount
+                      let amount = (holding.amount >= currentAmount ? currentAmount : holding.amount)
+                      let price = stockPrice * amount
+
+                      await database
+                        .transaction()
+                        .addTransaction({
+                          user,
+                          stock: holding.stockID,
+                          price: stockPrice,
+                          date: new Date().getTime(),
+                          type: 'sell',
+                          amount: amount
+                        })
+                        .then(async (addedTransaction) => {
+                          console.log(addedTransaction)
+                        })
+                      await database
+                        .user()
+                        .updateUser(user, { $inc: { 'balance': price } })
+                        .then((updatedUser) => {
+                          console.log('Increased user\'s balance by ', price)
+                        })
+                      await database
+                        .holding()
+                        .updateOrAddHolding(user, holding.stockID, { $inc: { 'amount': -amount } })
+                        .then((updatedHolding) => {
+                          ctx.body = 'wonky'
+                        })
+                      return
+                    }
+                  }
+
+                  ctx.status = 400
+                  ctx.body = 'Not Enough Shares in Stock!'
+
+                })
 
             } else {
               ctx.status = 404

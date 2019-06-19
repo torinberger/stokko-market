@@ -32,19 +32,31 @@
       <h4>{{ stockMetaData.name }}<span> {{ stockMetaData.symbol }}</span></h4>
       <p>{{ stockMetaData.description }}</p>
       <div id="stock-interactions" v-if='authenticated'>
-        <q-btn label="Buy" color="primary" @click="alert = true" />
-        <q-btn label="Sell" color="primary" @click="alert = true" />
+        <q-btn label="Buy" color="primary" @click="alertBuy = true" />
+        <q-btn label="Sell" v-if="maxToSell >= 1" color="primary" @click="alertSell = true" />
 
-        <p v-if="userHolding">You own {{ userHolding.amount }} shares of this stock.</p>
+        <p v-if="userHolding && maxToSell >= 1">You own {{ userHolding.amount }} shares of this stock.</p>
 
-        <q-dialog v-model="alert">
+        <q-dialog v-model="alertBuy">
           <q-card>
             <q-card-section>
-              <div class="text-h6">Alert</div>
+              <div class="text-h6">Buy Stock</div>
             </q-card-section>
 
             <q-card-actions align="right">
-              <q-input type="number" filled v-model="amountToBuy"></q-input> <q-btn @click="buyStock" name="buy">Buy</q-btn>
+              <q-input type="number" filled min="1" v-model="amountToBuy"></q-input> <q-btn @click="buyStock" name="buy">Buy</q-btn>
+            </q-card-actions>
+          </q-card>
+        </q-dialog>
+
+        <q-dialog v-model="alertSell">
+          <q-card>
+            <q-card-section>
+              <div class="text-h6">Sell Stock</div>
+            </q-card-section>
+
+            <q-card-actions align="right">
+              <q-input type="number" filled :max="maxToSell" min="1" v-model="amountToBuy"></q-input> <q-btn @click="sellStock" name="buy">Sell</q-btn>
             </q-card-actions>
           </q-card>
         </q-dialog>
@@ -71,7 +83,9 @@ export default {
       metaStocks: [],
       userHolding: null,
       amountToBuy: 1,
-      alert: false,
+      maxToSell: 0,
+      alertBuy: false,
+      alertSell: false,
       stockMetaData: null,
       authenticated: false
     }
@@ -161,6 +175,8 @@ export default {
                     if (userHoldings[i].stock === self.stockMetaData._id) {
                       console.log('User owns current stock!')
                       self.userHolding = userHoldings[i]
+                      self.maxToSell = userHoldings[i].amount
+                      console.log('max to sell', self.maxToSell)
                     }
                   }
                 })
@@ -201,6 +217,7 @@ export default {
         .then(function (response) {
           console.log(response)
           self.$q.notify({ message: 'Stock bought succesfully!', color: 'green' })
+          self.requestStock(self.stocks[0])
         })
         .catch((err) => {
           console.log(err)
@@ -208,6 +225,39 @@ export default {
 
           if (errCode === '400') {
             self.$q.notify({ message: 'You do not have enough money!', color: 'red' })
+          }
+        })
+    },
+    sellStock () {
+      let self = this
+
+      console.log('selling stock of id ', this.stockMetaData._id)
+
+      axios
+        .post(`http://localhost:3000/api/market/sell/stock/${this.stocks[0]}`, {
+          holding: {
+            amount: this.amountToBuy,
+            stockID: this.stockMetaData._id
+          },
+          user: this.$store.state.user
+        },
+        {
+          headers: {
+            'Access-Control-Allow-Origin': '*',
+            'Authorization': 'Bearer ' + this.$store.state.JWTtoken
+          }
+        })
+        .then(function (response) {
+          console.log(response)
+          self.$q.notify({ message: 'Stock sold succesfully!', color: 'green' })
+          self.requestStock(self.stocks[0])
+        })
+        .catch((err) => {
+          console.log(err)
+          let errCode = err.message.split(' ')[err.message.split(' ').length - 1]
+
+          if (errCode === '400') {
+            self.$q.notify({ message: 'You do not have any of this stock!', color: 'red' })
           }
         })
     }
