@@ -79,7 +79,6 @@ export default {
       model: null,
       stocks: [],
       stockOptions: [],
-      staticStocks: [],
       metaStocks: [],
       userHolding: null,
       amountToBuy: 1,
@@ -107,7 +106,7 @@ export default {
         }
       })
       .then((response) => {
-        console.log(response.data)
+        console.log('Found all stocks:', response.data)
         let stocks = []
 
         for (let i = 0; i < response.data.length; i++) {
@@ -115,11 +114,11 @@ export default {
         }
 
         self.metaStocks = response.data
-        self.staticStocks = stocks
         self.stockOptions = stocks
 
-        self.requestStock(this.stocks[0])
-        console.log('STOCK ', this.stocks[0])
+        if (self.stocks.length !== 0) {
+          self.requestStock(this.stocks[0])
+        }
       })
   },
   methods: {
@@ -129,7 +128,7 @@ export default {
       this.stocks = []
       this.stocks = [stock]
 
-      console.log(this.stocks)
+      console.log('Requesting current stock', this.stocks)
 
       history.pushState(
         { urlPath: `/#/stock/${stock}` },
@@ -138,8 +137,6 @@ export default {
       )
 
       let self = this
-
-      console.log(self.metaStocks)
 
       for (let i = 0; i < self.metaStocks.length; i++) {
         const target = self.metaStocks[i]
@@ -158,28 +155,23 @@ export default {
             }
           })
           .then((response) => {
-            console.log('auth:')
-            console.log(response)
-
             if (response.data === 'Validated') {
               self.authenticated = true
+              console.log('User is authenticated')
 
               axios
                 .get(`http://localhost:3000/api/market/get/holdings/${this.$store.state.user}`)
                 .then((holdings) => {
-                  console.log('Holdings ', holdings.data)
-                  console.log(self.$store.state.user)
+                  console.log('Users holdings ', holdings.data)
 
-                  console.log(self.stockMetaData)
                   let userHoldings = holdings.data
 
                   for (var i = 0; i < userHoldings.length; i++) {
-                    console.log(userHoldings[i]._id, self.stockMetaData._id)
                     if (userHoldings[i].stock === self.stockMetaData._id) {
-                      console.log('User owns current stock!')
+                      console.log('User owns current stock')
                       self.userHolding = userHoldings[i]
                       self.maxToSell = userHoldings[i].amount
-                      console.log('max to sell', self.maxToSell)
+                      console.log('Maximum user can sell of stock', self.maxToSell)
                     }
                   }
                 })
@@ -195,13 +187,13 @@ export default {
       let self = this
       update(() => {
         const needle = val.toLowerCase()
-        this.stockOptions = self.staticStocks.filter(v => v.toLowerCase().indexOf(needle) > -1)
+        this.stockOptions = self.stockOptions.filter(v => v.toLowerCase().indexOf(needle) > -1)
       })
     },
     buyStock () {
       let self = this
 
-      console.log('biyung stock of id ', this.stockMetaData._id)
+      console.log('Buying stock of id', this.stockMetaData._id)
 
       axios
         .post(`http://localhost:3000/api/market/buy/stock/${this.stocks[0]}`, {
@@ -218,12 +210,12 @@ export default {
           }
         })
         .then(function (response) {
-          console.log(response)
+          console.log('Bought stock')
           self.$q.notify({ message: 'Stock bought succesfully!', color: 'green' })
           self.requestStock(self.stocks[0])
         })
         .catch((err) => {
-          console.log(err)
+          console.log('error in buying stock', err)
           let errCode = err.message.split(' ')[err.message.split(' ').length - 1]
 
           if (errCode === '400') {
@@ -234,7 +226,7 @@ export default {
     sellStock () {
       let self = this
 
-      console.log('selling stock of id ', this.stockMetaData._id)
+      console.log('Selling stock of id', this.stockMetaData._id)
 
       axios
         .post(`http://localhost:3000/api/market/sell/stock/${this.stocks[0]}`, {
@@ -251,12 +243,12 @@ export default {
           }
         })
         .then(function (response) {
-          console.log(response)
+          console.log('Sold stock succesfully')
           self.$q.notify({ message: 'Stock sold succesfully!', color: 'green' })
           self.requestStock(self.stocks[0])
         })
         .catch((err) => {
-          console.log(err)
+          console.log('Error selling stock', err)
           let errCode = err.message.split(' ')[err.message.split(' ').length - 1]
 
           if (errCode === '400') {

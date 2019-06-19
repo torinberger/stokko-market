@@ -54,15 +54,12 @@ export default {
         }
       })
       .then((response) => {
-        console.log(response)
-
         if (response.data.type === 'err') {
           this.errorMsg = 'Couldn\'t Find Stock'
           this.ready = true
         }
 
         let data = response.data.dataset_data.data.reverse()
-        console.log(data)
 
         self.chartData.datasets.push({
           label: self.stock,
@@ -83,12 +80,10 @@ export default {
           self.chartData.datasets[0].data.push(Math.round(Number(point[11])))
         }
 
-        console.log(self)
-
         self.ready = true
       })
       .catch((err) => {
-        console.log(err)
+        console.log('Error in getting stock history', err)
         this.errorMsg = 'Couldn\'t Find Stock'
         this.ready = true
       })

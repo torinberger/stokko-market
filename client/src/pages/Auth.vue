@@ -99,8 +99,6 @@ export default {
           password: String(sha256(String(self.password)))
         })
         .then((response) => {
-          console.log(response)
-
           if (!response.data || !response.data.token) {
             this.$q.notify({ message: 'Uknown Error!', color: 'orange' })
           } else {
@@ -108,11 +106,11 @@ export default {
 
             this.$store.commit('setJWTtoken', response.data.token)
             this.$store.commit('setUser', response.data.user._id)
-            console.log(this.$store.state.JWTtoken)
-            console.log(this.$store.state.user)
+            console.log('User token', this.$store.state.JWTtoken)
+            console.log('User ID', this.$store.state.user)
           }
         }).catch(function (err) {
-          console.log(err)
+          console.log('Error registering user', err)
           self.$q.notify({ message: 'Username/Password Taken', color: 'red' })
           this.password = ''
         })
@@ -132,8 +130,6 @@ export default {
           password: String(sha256(String(self.password)))
         })
         .then((response) => {
-          console.log(response)
-
           if (!response.data || !response.data.token) {
             this.$q.notify({ message: 'Uknown Error!', color: 'orange' })
           } else {
@@ -141,11 +137,11 @@ export default {
 
             this.$store.commit('setJWTtoken', response.data.token)
             this.$store.commit('setUser', response.data.user._id)
-            console.log(this.$store.state.JWTtoken)
-            console.log(this.$store.state.user)
+            console.log('User token', this.$store.state.JWTtoken)
+            console.log('User ID', this.$store.state.user)
           }
         }).catch(function (err) {
-          console.log(err)
+          console.log('Error logging in user', err)
           self.$q.notify({ message: 'Incorrect Username/Password!', color: 'red' })
           self.password = null
         })

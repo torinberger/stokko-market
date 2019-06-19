@@ -22,8 +22,6 @@ export default {
       chartData.datasets[i].backgroundColor = this.gradients[i]
     }
 
-    console.log(this.chartData)
-
     this.renderChart(this.chartData, { responsive: true, maintainAspectRatio: false })
   }
 }
