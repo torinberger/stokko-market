@@ -3,7 +3,7 @@
 
     <q-select
       filled
-      v-model="model"
+      v-model="stockSearch"
       use-input
       hide-selected
       fill-input
@@ -76,9 +76,10 @@ export default {
   },
   data () {
     return {
-      model: null,
+      stockSearch: null,
       stocks: [],
       stockOptions: [],
+      staticOptions: [],
       metaStocks: [],
       userHolding: null,
       amountToBuy: 1,
@@ -114,7 +115,7 @@ export default {
         }
 
         self.metaStocks = response.data
-        self.stockOptions = stocks
+        self.stockOptions = self.staticOptions = stocks
 
         if (self.stocks.length !== 0) {
           self.requestStock(this.stocks[0])
@@ -187,7 +188,7 @@ export default {
       let self = this
       update(() => {
         const needle = val.toLowerCase()
-        this.stockOptions = self.stockOptions.filter(v => v.toLowerCase().indexOf(needle) > -1)
+        this.stockOptions = self.staticOptions.filter(v => v.toLowerCase().indexOf(needle) > -1)
       })
     },
     buyStock () {
