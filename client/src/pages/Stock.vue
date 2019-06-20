@@ -32,8 +32,8 @@
       <h4>{{ stockMetaData.name }}<span> {{ stockMetaData.symbol }}</span></h4>
       <p>{{ stockMetaData.description }}</p>
       <div id="stock-interactions" v-if='authenticated'>
-        <q-btn label="Buy" color="primary" @click="alertBuy = true" />
-        <q-btn label="Sell" v-if="maxToSell >= 1" color="primary" @click="alertSell = true" />
+        <q-btn label="Buy" :disabled="disableInput" color="primary" @click="alertBuy = true" />
+        <q-btn label="Sell" :disabled="disableInput" v-if="maxToSell >= 1" color="primary" @click="alertSell = true" />
 
         <p v-if="userHolding && maxToSell >= 1">You own {{ userHolding.amount }} shares of this stock.</p>
 
@@ -44,7 +44,7 @@
             </q-card-section>
 
             <q-card-actions align="right">
-              <q-input type="number" filled min="1" v-model="amountToBuy"></q-input> <q-btn @click="buyStock" name="buy">Buy</q-btn>
+              <q-input type="number" filled min="1" v-model="amountToBuy"></q-input> <q-btn @click="buyStock" :disabled="disableInput" name="buy">Buy</q-btn>
             </q-card-actions>
           </q-card>
         </q-dialog>
@@ -56,7 +56,7 @@
             </q-card-section>
 
             <q-card-actions align="right">
-              <q-input type="number" filled :max="maxToSell" min="1" v-model="amountToBuy"></q-input> <q-btn @click="sellStock" name="buy">Sell</q-btn>
+              <q-input type="number" filled :max="maxToSell" min="1" v-model="amountToBuy"></q-input> <q-btn @click="sellStock" :disabled="disableInput" name="buy">Sell</q-btn>
             </q-card-actions>
           </q-card>
         </q-dialog>
@@ -85,6 +85,7 @@ export default {
       amountToBuy: 1, // amount the user is attemping to buy
       maxToSell: 0, // maximum amount of the current stock a user can sell
       alertBuy: false, // buy popup
+      disableInput: false, // disable buttons if input is loading
       alertSell: false, // sell popup
       stockMetaData: null, // meta data for current stock { symbol, desc, etc }
       authenticated: false // boolean for whether the user is logged in or not
@@ -194,6 +195,8 @@ export default {
     buyStock () {
       let self = this
 
+      this.disableInput = true
+
       console.log('Buying stock of id', this.stockMetaData._id)
 
       axios
@@ -213,6 +216,8 @@ export default {
         .then(function (response) {
           console.log('Bought stock')
           self.$q.notify({ message: 'Stock bought succesfully!', color: 'green' })
+          self.alertBuy = false
+          self.disableInput = false
           self.requestStock(self.stocks[0])
         })
         .catch((err) => {
@@ -221,11 +226,15 @@ export default {
 
           if (errCode === '400') {
             self.$q.notify({ message: 'You do not have enough money!', color: 'red' })
+            self.alertBuy = false
+            self.disableInput = false
           }
         })
     },
     sellStock () {
       let self = this
+
+      this.disableInput = true
 
       console.log('Selling stock of id', this.stockMetaData._id)
 
@@ -246,6 +255,8 @@ export default {
         .then(function (response) {
           console.log('Sold stock succesfully')
           self.$q.notify({ message: 'Stock sold succesfully!', color: 'green' })
+          self.alertSell = false
+          self.disableInput = false
           self.requestStock(self.stocks[0])
         })
         .catch((err) => {
@@ -254,6 +265,8 @@ export default {
 
           if (errCode === '400') {
             self.$q.notify({ message: 'You do not have any of this stock!', color: 'red' })
+            self.alertSell = false
+            self.disableInput = false
           }
         })
     }
