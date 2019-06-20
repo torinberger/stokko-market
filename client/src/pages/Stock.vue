@@ -81,6 +81,7 @@ export default {
       stockOptions: [], // used for stock search
       staticOptions: [], // used for stock search
       stocksMetaData: [], // meta data { symbol, description, etc } for all stocks
+      stockHistory: [],
       userHolding: null, // current holding of stock user is observing
       amountToBuy: 1, // amount the user is attemping to buy
       maxToSell: 0, // maximum amount of the current stock a user can sell
@@ -146,6 +147,27 @@ export default {
         if (target.symbol === self.stocks[0]) {
           self.stockMetaData = target
         }
+      }
+
+      if (this.stocks.length >= 1) {
+        axios
+          .get(`http://localhost:3000/api/market/get/stockHistory/${this.stocks[0]}`, {
+            headers: {
+              'Access-Control-Allow-Origin': '*',
+              'Authorization': 'Bearer ' + self.$store.state.JWTtoken
+            }
+          })
+          .then((response) => {
+            if (response.data.type === 'err') {
+              self.$q.notify({ message: 'Error getting stock data!', color: 'red' })
+            } else {
+              self.stockHistory = response.data
+            }
+          })
+          .catch((err) => {
+            console.log(err)
+            self.$q.notify({ message: 'Error getting stock data!', color: 'red' })
+          })
       }
 
       if (self.$store.state.JWTtoken) {
