@@ -43,6 +43,10 @@
               <div class="text-h6">Buy Stock</div>
             </q-card-section>
 
+            <q-card-section>
+              <p>-${{ currentStockPrice * amountToBuy }}</p>
+            </q-card-section>
+
             <q-card-actions align="right">
               <q-input type="number" filled min="1" v-model="amountToBuy"></q-input> <q-btn @click="buyStock" :disabled="disableInput" name="buy">Buy</q-btn>
             </q-card-actions>
@@ -53,6 +57,10 @@
           <q-card>
             <q-card-section>
               <div class="text-h6">Sell Stock</div>
+            </q-card-section>
+
+            <q-card-section>
+              <p>+${{ currentStockPrice * amountToBuy }}</p>
             </q-card-section>
 
             <q-card-actions align="right">
@@ -81,7 +89,7 @@ export default {
       stockOptions: [], // used for stock search
       staticOptions: [], // used for stock search
       stocksMetaData: [], // meta data { symbol, description, etc } for all stocks
-      stockHistory: [],
+      currentStockPrice: 0,
       userHolding: null, // current holding of stock user is observing
       amountToBuy: 1, // amount the user is attemping to buy
       maxToSell: 0, // maximum amount of the current stock a user can sell
@@ -139,6 +147,8 @@ export default {
         `/#/stock/${stock}`
       )
 
+      this.$store.commit('updateBalance')
+
       let self = this
 
       for (let i = 0; i < self.stocksMetaData.length; i++) {
@@ -161,7 +171,10 @@ export default {
             if (response.data.type === 'err') {
               self.$q.notify({ message: 'Error getting stock data!', color: 'red' })
             } else {
-              self.stockHistory = response.data
+              console.log('Received stock history')
+              let stockHistory = response.data.dataset_data.data
+              self.currentStockPrice = stockHistory[0][11]
+              console.log('Current stock pice', self.currentStockPrice)
             }
           })
           .catch((err) => {

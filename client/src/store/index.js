@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import axios from 'axios'
 
 // import example from './module-example'
 
@@ -17,7 +18,8 @@ export default function (/* { ssrContext } */) {
     },
     state: {
       JWTtoken: '',
-      user: ''
+      user: '',
+      balance: null
     },
     mutations: {
       setJWTtoken (state, token) {
@@ -25,6 +27,22 @@ export default function (/* { ssrContext } */) {
       },
       setUser (state, id) {
         state.user = id
+      },
+      updateBalance (state) {
+        if (state.user) {
+          axios
+            .get(`http://localhost:3000/api/users/get/user/${state.user}`, {
+              headers: {
+                'Access-Control-Allow-Origin': '*',
+                'Authorization': 'Bearer ' + state.JWTtoken
+              }
+            })
+            .then((response) => {
+              let user = response.data[0]
+              console.log('User', user)
+              state.balance = user.balance
+            })
+        }
       }
     },
     // enable strict mode (adds overhead!)

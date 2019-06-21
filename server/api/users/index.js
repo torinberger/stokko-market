@@ -1,8 +1,6 @@
 
 const Router = require('koa-router')
 
-const Response = require('../../utils/responseStandard')
-
 module.exports = (database) => {
   const users = new Router()
 
@@ -11,13 +9,15 @@ module.exports = (database) => {
 
     await database
       .user()
-      .getUserByID(userID)
+      .getUser({ _id: userID })
       .then((user) => {
-        delete user.password
-        ctx.body = new Response('success', user)
+        ctx.status = 200
+        ctx.body = user
       })
       .catch((err) => {
-        ctx.body = new Response('err', err)
+        console.log(err)
+        ctx.body = 500
+        ctx.body = err
       })
   })
 
@@ -26,10 +26,12 @@ module.exports = (database) => {
       .user()
       .getUsers()
       .then((users) => {
-        ctx.body = new Response('success', users)
+        ctx.body = 200
+        ctx.body = users
       })
       .catch((err) => {
-        ctx.body = new Response('err', err)
+        ctx.status = 500
+        ctx.body = err
       })
   })
 

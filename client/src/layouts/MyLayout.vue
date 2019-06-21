@@ -8,6 +8,7 @@
         </q-toolbar-title>
 
         <div>
+          ${{ $store.balance }}
           <q-btn
             flat
             dense
