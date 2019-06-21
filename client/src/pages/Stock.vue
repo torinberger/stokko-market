@@ -110,6 +110,8 @@ export default {
 
     if (this.stocks[0] === undefined) {
       this.stocks = []
+      console.log('echign')
+      this.checkBalance()
     }
 
     let self = this
@@ -138,6 +140,24 @@ export default {
       })
   },
   methods: {
+    checkBalance () {
+      let self = this
+      console.log('eycychch')
+      if (self.$store.state.user) {
+        axios
+          .get(`http://localhost:3000/api/users/get/user/${self.$store.state.user}`, {
+            headers: {
+              'Access-Control-Allow-Origin': '*',
+              'Authorization': 'Bearer ' + self.$store.state.JWTtoken
+            }
+          })
+          .then((response) => {
+            let user = response.data[0]
+            console.log('User', user)
+            self.$store.commit('updateBalance', user.balance)
+          })
+      }
+    },
     requestStock (input) {
       const stock = String(input).toUpperCase()
 
@@ -152,7 +172,7 @@ export default {
         `/#/stock/${stock}`
       )
 
-      this.$store.commit('updateBalance')
+      this.checkBalance()
 
       let self = this
 
