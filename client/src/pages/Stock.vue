@@ -100,6 +100,11 @@ export default {
       authenticated: false // boolean for whether the user is logged in or not
     }
   },
+  computed: {
+    balance () {
+      return this.$store.state.balance
+    }
+  },
   created () {
     this.stocks = [this.$route.params.stock]
 

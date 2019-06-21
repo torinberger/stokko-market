@@ -8,7 +8,7 @@
         </q-toolbar-title>
 
         <div>
-          ${{ $store.balance }}
+          ${{ balance }}
           <q-btn
             flat
             dense
@@ -87,6 +87,11 @@ export default {
   data () {
     return {
       leftDrawerOpen: this.$q.platform.is.desktop
+    }
+  },
+  computed: {
+    balance () {
+      return this.$store.state.balance
     }
   },
   methods: {
