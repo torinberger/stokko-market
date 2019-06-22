@@ -1,6 +1,6 @@
 <template>
   <div class="leaderboard-page">
-    <div class="container column">
+    <div v-if="ready" class="container column">
       <router-link
         :to="'/portfolio/' + user.username"
         class="rank self-center"
@@ -10,6 +10,17 @@
       >
         <span>{{ index+1 }}. </span><span>{{ user.username }} - ${{ user.balance }}</span>
       </router-link>
+    </div>
+
+    <div v-if="!ready" class="loading-container">
+      <q-circular-progress
+        v-if="!err"
+        indeterminate
+        size="40px"
+        color="blue-6"
+        class="q-ma-md"
+      />
+      <h4 :if="err">{{ err }}</h4>
     </div>
   </div>
 </template>
@@ -23,7 +34,9 @@ export default {
   data () {
     return {
       userID: null,
-      leaderboard: []
+      leaderboard: [],
+      ready: false,
+      err: ''
     }
   },
   created () {
@@ -42,6 +55,9 @@ export default {
           console.log('User', user)
           self.$store.commit('updateBalance', user.balance)
           self.loadBoard()
+        })
+        .catch((err) => {
+          self.err = err
         })
     } else {
       self.loadBoard()
@@ -70,6 +86,10 @@ export default {
           })
 
           self.leaderboard = users
+          self.ready = true
+        })
+        .catch((err) => {
+          self.err = err
         })
     }
   }
