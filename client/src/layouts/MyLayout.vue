@@ -79,6 +79,15 @@
             <q-item-label caption>View Your Own Profile and Other's</q-item-label>
           </q-item-section>
         </q-item>
+        <q-item clickable tag="a" href="/#/leaderboard/">
+          <q-item-section avatar>
+            <q-icon name="format_list_numbered" />
+          </q-item-section>
+          <q-item-section>
+            <q-item-label>Leaderboard</q-item-label>
+            <q-item-label caption>See What Your Rank is</q-item-label>
+          </q-item-section>
+        </q-item>
       </q-list>
     </q-drawer>
 

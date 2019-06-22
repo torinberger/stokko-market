@@ -9,6 +9,7 @@ const routes = [
       { path: '/stock/', component: () => import('pages/Stock.vue') },
       { path: '/portfolio/:user', component: () => import('pages/Portfolio.vue') },
       { path: '/portfolio/', component: () => import('pages/Portfolio.vue') },
+      { path: '/leaderboard/', component: () => import('pages/Leaderboard.vue') },
       { path: '/auth/:mode', component: () => import('pages/Auth.vue') }
     ]
   }
