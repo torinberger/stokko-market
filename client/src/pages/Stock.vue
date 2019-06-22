@@ -296,7 +296,7 @@ export default {
 
       this.disableInput = true
 
-      console.log('Selling stock of id', this.stockMetaData._id)
+      console.log('Selling stock of id', this.stockMetaData._id, 'times', this.amountToBuy)
 
       axios
         .post(`http://localhost:3000/api/market/sell/stock/${this.stocks[0]}`, {

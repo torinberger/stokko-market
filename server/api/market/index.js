@@ -149,6 +149,7 @@ module.exports = (database) => {
     let { user } = postData // user ID
     let stockSymbol = ctx.params.stock
     console.log(stockSymbol)
+    console.log('amount to sell', holding.amount)
 
     await axios
       .get(`https://www.quandl.com/api/v3/datasets/WIKI/${stockSymbol}/data.json?api_key=${serverPrivate.api.key}&collapse=quarterly&start_date=2000-01-01`)
@@ -171,10 +172,12 @@ module.exports = (database) => {
                 .then(async (holdings) => {
 
                   for (var i = 0; i < holdings.length; i++) {
-                    if (holdings[i].user == user) {
-                      let currentAmount = holdings[i].amount
-                      let amount = (holding.amount >= currentAmount ? currentAmount : holding.amount)
-                      let price = stockPrice * amount
+                    if (holdings[i].user == user && holdings[i].amount > 0) {
+                      console.log('user currently owns', holdings[i].amount)
+                      console.log('selling', (holding.amount <= holdings[i].amount ? holding.amount : holdings[i].amount), 'shares')
+
+                      let amountToSell = (holding.amount <= holdings[i].amount ? holding.amount : holdings[i].amount) // gets lower value, owned amount, or requested sell amount
+                      let price = stockPrice * amountToSell
 
                       await database
                         .transaction()
@@ -184,7 +187,7 @@ module.exports = (database) => {
                           price: stockPrice,
                           date: new Date().getTime(),
                           type: 'sell',
-                          amount: amount
+                          amount: amountToSell
                         })
                         .then(async (addedTransaction) => {
                           console.log(addedTransaction)
@@ -197,7 +200,7 @@ module.exports = (database) => {
                         })
                       await database
                         .holding()
-                        .updateOrAddHolding(user, holding.stockID, { $inc: { 'amount': -amount } })
+                        .updateOrAddHolding(user, holding.stockID, { $inc: { 'amount': -amountToSell } })
                         .then((updatedHolding) => {
                           ctx.body = 'wonky'
                         })

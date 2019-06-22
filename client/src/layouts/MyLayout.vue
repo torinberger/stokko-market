@@ -8,7 +8,7 @@
         </q-toolbar-title>
 
         <div>
-          ${{ balance }}
+          <span v-if="balance">${{ balance }}</span>
           <q-btn
             flat
             dense
