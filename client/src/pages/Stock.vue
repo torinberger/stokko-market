@@ -286,6 +286,7 @@ export default {
           console.log('Bought stock')
           self.$q.notify({ message: 'Stock bought succesfully!', color: 'green' })
           self.alertBuy = false
+          self.amountToBuy = 1
           self.disableInput = false
           self.requestStock(self.stocks[0])
         })
@@ -326,6 +327,7 @@ export default {
           self.$q.notify({ message: 'Stock sold succesfully!', color: 'green' })
           self.alertSell = false
           self.disableInput = false
+          self.amountToBuy = 1
           self.requestStock(self.stocks[0])
         })
         .catch((err) => {
