@@ -108,6 +108,8 @@ export default {
             this.$store.commit('setUser', response.data.user._id)
             console.log('User token', this.$store.state.JWTtoken)
             console.log('User ID', this.$store.state.user)
+
+            self.$router.push('/portfolio/')
           }
         }).catch(function (err) {
           console.log('Error registering user', err)
@@ -139,6 +141,8 @@ export default {
             this.$store.commit('setUser', response.data.user._id)
             console.log('User token', this.$store.state.JWTtoken)
             console.log('User ID', this.$store.state.user)
+
+            self.$router.push('/portfolio/')
           }
         }).catch(function (err) {
           console.log('Error logging in user', err)
