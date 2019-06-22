@@ -92,7 +92,7 @@ export default {
 
 </script>
 
-<style>
+<style scoped>
 
 @media only screen and (max-width: 500px) and (max-height: 820px) {
   .container {

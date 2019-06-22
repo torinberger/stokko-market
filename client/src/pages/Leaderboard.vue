@@ -97,7 +97,7 @@ export default {
 
 </script>
 
-<style media="screen">
+<style scoped>
 .rank {
   width: 80vw;
   display: block;

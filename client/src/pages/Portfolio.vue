@@ -96,7 +96,7 @@ export default {
 }
 </script>
 
-<style media="screen">
+<style scoped>
 .loading-container {
   height: calc(100vh - 50px);
   display: flex;
