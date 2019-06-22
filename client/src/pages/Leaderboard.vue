@@ -1,9 +1,15 @@
 <template>
   <div class="leaderboard-page">
-    <div class="container">
-      <div class="rank" v-bind:key="user._id" v-for="(user, index) in leaderboard" v-bind:style="{ background: (userID === user._id ? 'white' : 'grey') }">
+    <div class="container column">
+      <router-link
+        :to="'/portfolio/' + user.username"
+        class="rank self-center"
+        v-bind:key="user._id"
+        v-for="(user, index) in leaderboard"
+        v-bind:style="{ background: (userID === user._id ? 'white' : 'grey') }"
+      >
         <span>{{ index+1 }}. </span><span>{{ user.username }} - ${{ user.balance }}</span>
-      </div>
+      </router-link>
     </div>
   </div>
 </template>
@@ -70,3 +76,19 @@ export default {
 }
 
 </script>
+
+<style media="screen">
+.rank {
+  width: 80vw;
+  display: block;
+}
+
+a {
+  color: black;
+  text-decoration: none;
+}
+
+a:hover {
+  color: black;
+}
+</style>
