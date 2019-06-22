@@ -32,7 +32,7 @@
       <h4>{{ stockMetaData.name }}<span> {{ stockMetaData.symbol }}</span></h4>
       <p>{{ stockMetaData.description }}</p>
       <div id="stock-interactions" v-if='authenticated'>
-        <q-btn label="Buy" :disabled="disableInput" color="primary" @click="alertBuy = true" />
+        <q-btn label="Buy" :disabled="disableInput || Math.floor(balance / currentStockPrice) <= 0" color="primary" @click="alertBuy = true" />
         <q-btn label="Sell" :disabled="disableInput" v-if="maxToSell >= 1" color="primary" @click="alertSell = true" />
 
         <p v-if="userHolding && maxToSell >= 1">You own {{ userHolding.amount }} shares of this stock.</p>
@@ -44,11 +44,11 @@
             </q-card-section>
 
             <q-card-section>
-              <p>-${{ currentStockPrice * amountToBuy }}</p>
+              <p>-${{ currentStockPrice * amountToBuy }} / Maximum purchasable: {{ Math.floor(balance / currentStockPrice) }}</p>
             </q-card-section>
 
             <q-card-actions align="right">
-              <q-input type="number" filled min="1" v-model="amountToBuy"></q-input> <q-btn @click="buyStock" :disabled="disableInput" name="buy">Buy</q-btn>
+              <q-input type="number" @input="checkValidNumber(Math.floor(balance / currentStockPrice), 1)" filled :max="Math.floor(balance / currentStockPrice)" min="1" v-model="amountToBuy"></q-input> <q-btn @click="buyStock" :disabled="disableInput || amountToBuy <= 0" name="buy">Buy</q-btn>
             </q-card-actions>
           </q-card>
         </q-dialog>
@@ -64,7 +64,7 @@
             </q-card-section>
 
             <q-card-actions align="right">
-              <q-input type="number" filled :max="maxToSell" min="1" v-model="amountToBuy"></q-input> <q-btn @click="sellStock" :disabled="disableInput" name="buy">Sell</q-btn>
+              <q-input type="number" filled :max="maxToSell" @input="checkValidNumber(maxToSell, 1)" min="1" v-model="amountToBuy"></q-input> <q-btn @click="sellStock" :disabled="disableInput || amountToBuy <= 0" name="buy">Sell</q-btn>
             </q-card-actions>
           </q-card>
         </q-dialog>
@@ -107,6 +107,7 @@ export default {
   },
   created () {
     this.stocks = [this.$route.params.stock]
+    this.disableInput = true
 
     if (this.stocks[0] === undefined) {
       this.stocks = []
@@ -140,6 +141,13 @@ export default {
       })
   },
   methods: {
+    checkValidNumber (max, min) {
+      if (this.amountToBuy > max) {
+        this.amountToBuy = max
+      } else if (this.amountToBuy < min) {
+        this.amountToBuy = min
+      }
+    },
     checkBalance () {
       let self = this
       console.log('eycychch')
@@ -234,6 +242,7 @@ export default {
                       self.userHolding = userHoldings[i]
                       self.maxToSell = userHoldings[i].amount
                       console.log('Maximum user can sell of stock', self.maxToSell)
+                      this.disableInput = false
                     }
                   }
                 })
