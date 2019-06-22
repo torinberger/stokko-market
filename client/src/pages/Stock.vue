@@ -150,7 +150,6 @@ export default {
     },
     checkBalance () {
       let self = this
-      console.log('eycychch')
       if (self.$store.state.user) {
         axios
           .get(`http://localhost:3000/api/users/get/user/${self.$store.state.user}`, {
@@ -168,6 +167,8 @@ export default {
     },
     requestStock (input) {
       const stock = String(input).toUpperCase()
+
+      this.disableInput = true
 
       this.stocks = []
       this.stocks = [stock]
@@ -233,6 +234,7 @@ export default {
                 .get(`http://localhost:3000/api/market/get/holdings/${this.$store.state.user}`)
                 .then((holdings) => {
                   console.log('Users holdings ', holdings.data)
+                  this.disableInput = false
 
                   let userHoldings = holdings.data
 
@@ -242,7 +244,6 @@ export default {
                       self.userHolding = userHoldings[i]
                       self.maxToSell = userHoldings[i].amount
                       console.log('Maximum user can sell of stock', self.maxToSell)
-                      this.disableInput = false
                     }
                   }
                 })
