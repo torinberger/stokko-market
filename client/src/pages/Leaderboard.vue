@@ -98,6 +98,13 @@ export default {
 </script>
 
 <style scoped>
+.loading-container {
+  height: calc(100vh - 50px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .rank {
   width: 80vw;
   display: block;
