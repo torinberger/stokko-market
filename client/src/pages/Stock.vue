@@ -30,7 +30,7 @@
     </div>
 
     <div id="stock-info" v-if="stockMetaData">
-      <h4>{{ stockMetaData.name }}<span> {{ stockMetaData.symbol }}</span></h4>
+      <h4>{{ stockMetaData.name }}<span> {{ stockMetaData.symbol }}</span><span style="float: right;">${{ currentStockPrice }}</span></h4>
       <p>{{ stockMetaData.description }}</p>
       <div id="stock-interactions" v-if='authenticated'>
         <q-btn label="Buy" :disabled="disableInput || Math.floor(balance / currentStockPrice) <= 0" color="primary" @click="alertBuy = true" />

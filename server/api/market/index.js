@@ -52,9 +52,9 @@ module.exports = (database) => {
 
     await axios
       .get(`https://www.alphavantage.co/query?function=TIME_SERIES_${timeInterval == 'INTRADAY' ? timeInterval : timeInterval + '_ADJUSTED'}&symbol=${stockSymbol}&apikey=${key}&interval=60min`)
-      .then(function (response) {
+      .then(async (response) => {
         let history = response.data
-        console.log(response)
+        console.log(response.data.note ? response.data.note : 'Requested Stock!')
         let data = obj2Arr(obj2Arr(history)[1], true).reverse()
 
         ctx.status = 200
@@ -65,20 +65,6 @@ module.exports = (database) => {
         ctx.status = 404
         ctx.body = 'Stock Not Found!'
       })
-
-    // await axios
-    //   .get(`https://www.quandl.com/api/v3/datasets/NASDAQOMX/${stockSymbol}?api_key=${serverPrivate.api.key}&collapse=${timeInterval}`)
-    //   .then(function (response) {
-    //     let history = response.data
-    //
-    //     ctx.status = 200
-    //     ctx.body = history
-    //   })
-    //   .catch(function (err) {
-    //     console.log(err)
-    //     ctx.status = 404
-    //     ctx.body = 'Stock Not Found!'
-    //   })
   })
 
   market.get('/get/stocks', async (ctx) => {
@@ -116,9 +102,11 @@ module.exports = (database) => {
     console.log(stockSymbol)
 
     await axios
-      .get(`https://www.quandl.com/api/v3/datasets/WIKI/${stockSymbol}/data.json?api_key=${serverPrivate.api.key}&collapse=quarterly&start_date=2000-01-01`)
-      .then(async function (response) {
-        let stockPrice = response.data.dataset_data.data[0][11]
+      .get(`https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=${stockSymbol}&apikey=${serverPrivate.api.key}&interval=60min`)
+      .then(async (response) => {
+        let history = response.data
+        console.log(response.data.note ? response.data.note : 'Requested Stock!')
+        let stockPrice = obj2Arr(obj2Arr(history)[1], true)[0]['4. close']
 
         console.log('stock price ', stockPrice)
 
@@ -184,9 +172,11 @@ module.exports = (database) => {
     console.log('amount to sell', holding.amount)
 
     await axios
-      .get(`https://www.quandl.com/api/v3/datasets/WIKI/${stockSymbol}/data.json?api_key=${serverPrivate.api.key}&collapse=quarterly&start_date=2000-01-01`)
-      .then(async function (response) {
-        let stockPrice = response.data.dataset_data.data[0][11]
+      .get(`https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=${stockSymbol}&apikey=${serverPrivate.api.key}&interval=60min`)
+      .then(async (response) => {
+        let history = response.data
+        console.log(response.data.note ? response.data.note : 'Requested Stock!')
+        let stockPrice = obj2Arr(obj2Arr(history)[1], true)[0]['4. close']
 
         console.log('stock price ', stockPrice)
 

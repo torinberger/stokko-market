@@ -8,7 +8,7 @@
         </q-toolbar-title>
 
         <div>
-          <span v-if="balance">${{ balance }}</span>
+          <span v-if="balance">${{ Math.round(balance * 100) / 100 }}</span>
           <q-btn
             flat
             dense
