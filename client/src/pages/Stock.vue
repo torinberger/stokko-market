@@ -180,6 +180,8 @@ export default {
       const stock = String(input).toUpperCase()
 
       this.disableInput = true
+      this.userHolding = null
+      this.maxToSell = 0
 
       this.stocks = []
       this.stocks = [stock]

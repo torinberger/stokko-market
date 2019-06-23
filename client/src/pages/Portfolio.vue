@@ -2,6 +2,7 @@
   <div class="portfolio-page">
     <div v-if="ready" class="container">
       <h3>{{ user.username }}<h5>#{{ user._id }}</h5></h3><span>${{ user.balance }}</span>
+      <portfolio-chart :user="user._id"></portfolio-chart>
     </div>
     <div v-if="!ready" class="loading-container">
       <q-circular-progress
@@ -22,6 +23,9 @@ import axios from 'axios'
 
 export default {
   name: 'Portfolio',
+  components: {
+    portfolioChart: () => import('../components/portfolioChart.vue')
+  },
   data () {
     return {
       user: null,
