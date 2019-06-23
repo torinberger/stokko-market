@@ -35,5 +35,21 @@ module.exports = (database) => {
       })
   })
 
+  users.get('/get/user/transactions/:userID', async (ctx) => {
+    let userID = ctx.params.id
+
+    await database
+      .transaction()
+      .getTransactions({user: userID})
+      .then((transactions) => {
+        ctx.body = 200
+        ctx.body = transactions
+      })
+      .catch((err) => {
+        ctx.status = 500
+        ctx.body = err
+      })
+  })
+
   return (users)
 }
