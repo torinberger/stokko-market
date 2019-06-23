@@ -24,7 +24,7 @@ import axios from 'axios'
 export default {
   name: 'Portfolio',
   components: {
-    portfolioChart: () => import('../components/portfolioChart.vue')
+    portfolioChart: () => import('../components/PortfolioChart.vue')
   },
   data () {
     return {
