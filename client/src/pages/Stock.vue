@@ -25,7 +25,8 @@
     </q-select>
 
     <div id="stock-chart-list" v-bind:key="currentStock" v-for="currentStock in stocks" elevated>
-      <stock-chart :stock="currentStock"></stock-chart>
+      <q-select v-model="timeInterval" @input="changeInterval" :options="['Hourly', 'Daily', 'Weekly', 'Monthly']"></q-select>
+      <stock-chart :stock="currentStock" :timeInterval="timeInterval"></stock-chart>
     </div>
 
     <div id="stock-info" v-if="stockMetaData">
@@ -97,7 +98,8 @@ export default {
       disableInput: false, // disable buttons if input is loading
       alertSell: false, // sell popup
       stockMetaData: null, // meta data for current stock { symbol, desc, etc }
-      authenticated: false // boolean for whether the user is logged in or not
+      authenticated: false, // boolean for whether the user is logged in or not.
+      timeInterval: 'Monthly'
     }
   },
   computed: {
@@ -141,6 +143,15 @@ export default {
       })
   },
   methods: {
+    changeInterval () {
+      console.log('change')
+      let currentStocks = this.stocks
+      this.stocks = []
+      let self = this
+      setTimeout(function () {
+        self.stocks = currentStocks
+      }, 10)
+    },
     checkValidNumber (max, min) {
       if (this.amountToBuy > max) {
         this.amountToBuy = max
@@ -195,7 +206,7 @@ export default {
 
       if (this.stocks.length >= 1) {
         axios
-          .get(`http://localhost:3000/api/market/get/stockHistory/${this.stocks[0]}`, {
+          .get(`http://localhost:3000/api/market/get/stockHistory/${this.stocks[0]}/DAILY`, {
             headers: {
               'Access-Control-Allow-Origin': '*',
               'Authorization': 'Bearer ' + self.$store.state.JWTtoken
@@ -206,8 +217,9 @@ export default {
               self.$q.notify({ message: 'Error getting stock data!', color: 'red' })
             } else {
               console.log('Received stock history')
-              let stockHistory = response.data.dataset_data.data
-              self.currentStockPrice = stockHistory[0][11]
+              let stockHistory = response.data
+              console.log(stockHistory)
+              self.currentStockPrice = stockHistory[0]['5. adjusted close']
               console.log('Current stock pice', self.currentStockPrice)
             }
           })

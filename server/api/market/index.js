@@ -4,6 +4,19 @@ const Router = require('koa-router')
 
 const serverPrivate = require('../../private.json')
 
+function obj2Arr (obj, addTitle) {
+  let arr = []
+
+  let i = 0
+  for (let elem in obj) {
+    arr.push(obj[elem])
+    if (addTitle) { arr[i]['0. date'] = elem }
+
+    i++
+  }
+  return arr
+}
+
 module.exports = (database) => {
   const market = new Router()
 
@@ -31,22 +44,41 @@ module.exports = (database) => {
       })
   })
 
-  market.get('/get/stockHistory/:stock', async (ctx) => {
+  market.get('/get/stockHistory/:stock/:time', async (ctx) => {
     let stockSymbol = ctx.params.stock
+    let timeInterval = ctx.params.time
+
+    const key = 'TSCOBBU3JCTRMZVA'
 
     await axios
-      .get(`https://www.quandl.com/api/v3/datasets/WIKI/${stockSymbol}/data.json?api_key=${serverPrivate.api.key}&collapse=quarterly&start_date=2000-01-01`)
+      .get(`https://www.alphavantage.co/query?function=TIME_SERIES_${timeInterval == 'INTRADAY' ? timeInterval : timeInterval + '_ADJUSTED'}&symbol=${stockSymbol}&apikey=${key}&interval=60min`)
       .then(function (response) {
         let history = response.data
+        console.log(response)
+        let data = obj2Arr(obj2Arr(history)[1], true).reverse()
 
         ctx.status = 200
-        ctx.body = history
+        ctx.body = data
       })
       .catch(function (err) {
         console.log(err)
         ctx.status = 404
         ctx.body = 'Stock Not Found!'
       })
+
+    // await axios
+    //   .get(`https://www.quandl.com/api/v3/datasets/NASDAQOMX/${stockSymbol}?api_key=${serverPrivate.api.key}&collapse=${timeInterval}`)
+    //   .then(function (response) {
+    //     let history = response.data
+    //
+    //     ctx.status = 200
+    //     ctx.body = history
+    //   })
+    //   .catch(function (err) {
+    //     console.log(err)
+    //     ctx.status = 404
+    //     ctx.body = 'Stock Not Found!'
+    //   })
   })
 
   market.get('/get/stocks', async (ctx) => {

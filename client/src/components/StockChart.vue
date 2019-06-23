@@ -3,7 +3,6 @@
     <div class="container">
       <div class="Chart__list">
         <div class="Chart">
-          <!-- <h2>{{ stock }}</h2> -->
           <line-chart v-if="ready && !errorMsg" :chartData="chartData"></line-chart>
           <div class="chart-loading-container" v-if="!ready">
             <q-circular-progress
@@ -32,7 +31,7 @@ export default {
   components: {
     LineChart
   },
-  props: ['stock'],
+  props: ['stock', 'timeInterval'],
   data () {
     return {
       chartData: {
@@ -47,7 +46,7 @@ export default {
     let self = this
 
     axios
-      .get(`http://localhost:3000/api/market/get/stockHistory/${this.stock}`, {
+      .get(`http://localhost:3000/api/market/get/stockHistory/${this.stock}/${this.timeInterval === 'Hourly' ? 'INTRADAY' : this.timeInterval.toUpperCase()}`, {
         headers: {
           'Access-Control-Allow-Origin': '*',
           'Authorization': 'Bearer ' + self.$store.state.JWTtoken
@@ -55,32 +54,42 @@ export default {
       })
       .then((response) => {
         if (response.data.type === 'err') {
-          this.errorMsg = 'Couldn\'t Find Stock'
-          this.ready = true
+          self.$q.notify({ message: 'Error getting stock data!', color: 'red' })
+        } else {
+          console.log('Received stock history')
+          let data = response.data
+          console.log(data)
+
+          if (response.data.type === 'err') {
+            this.errorMsg = 'Couldn\'t Find Stock'
+            this.ready = true
+          }
+
+          self.chartData.datasets.push({
+            label: self.stock,
+            borderColor: 'rgb(13, 71, 161)',
+            pointBackgroundColor: 'rgb(179, 229, 252)',
+            borderWidth: 2,
+            pointBorderColor: 'rgb(179, 229, 252)',
+            backgroundColor: 'rgb(68, 138, 255)',
+            data: []
+          })
+
+          for (let i = 0; i < data.length; i++) {
+            const point = data[i]
+
+            let cleanTime = point['0. date']
+
+            self.chartData.labels.push(cleanTime)
+            if (this.timeInterval === 'Hourly') {
+              self.chartData.datasets[0].data.push(Math.round(Number(point['4. close'])))
+            } else {
+              self.chartData.datasets[0].data.push(Math.round(Number(point['5. adjusted close'])))
+            }
+          }
+
+          self.ready = true
         }
-
-        let data = response.data.dataset_data.data.reverse()
-
-        self.chartData.datasets.push({
-          label: self.stock,
-          borderColor: 'rgb(13, 71, 161)',
-          pointBackgroundColor: 'rgb(179, 229, 252)',
-          borderWidth: 2,
-          pointBorderColor: 'rgb(179, 229, 252)',
-          backgroundColor: 'rgb(68, 138, 255)',
-          data: []
-        })
-
-        for (let i = 0; i < data.length; i++) {
-          const point = data[i]
-
-          let cleanTime = point[0]
-
-          self.chartData.labels.push(cleanTime)
-          self.chartData.datasets[0].data.push(Math.round(Number(point[11])))
-        }
-
-        self.ready = true
       })
       .catch((err) => {
         console.log('Error in getting stock history', err)
