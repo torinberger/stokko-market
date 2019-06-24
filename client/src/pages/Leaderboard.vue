@@ -1,15 +1,19 @@
 <template>
   <div class="leaderboard-page">
-    <div v-if="ready" class="container column">
-      <router-link
-        :to="'/portfolio/' + user.username"
-        class="rank self-center"
-        v-bind:key="user._id"
-        v-for="(user, index) in leaderboard"
-        v-bind:style="{ background: (userID === user._id ? 'white' : 'grey') }"
-      >
-        <span>{{ index+1 }}. </span><span>{{ user.username }} - ${{ user.balance }}</span>
-      </router-link>
+    <div v-if="ready" class="leaderboard-container">
+      <div class="container column">
+        <h3 style="text-align:center;margin: 1vh;">Leaderboard</h3>
+        <router-link
+          :to="'/portfolio/' + user.username"
+          class="rank self-center"
+          v-bind:key="user._id"
+          v-for="(user, index) in leaderboard"
+          v-bind:style="{ background: (userID === user._id ? '#027BE3' : 'white') }"
+          elevated
+        >
+          <span>{{ index+1 }}. </span><span>{{ user.username }}<span style="float: right;">${{ Math.round(user.balance * 100) / 100 }}</span></span>
+        </router-link>
+      </div>
     </div>
 
     <div v-if="!ready" class="loading-container">
@@ -105,8 +109,21 @@ export default {
   align-items: center;
 }
 
+.leaderboard-container {
+  margin-top: 5vh;
+  background: grey;
+  width: 40vw;
+  padding: 2vw;
+  margin-left: calc(calc(100vw - 44vw) / 2);
+}
+
 .rank {
-  width: 80vw;
+  width: 100%;
+  margin: 1vh;
+  margin-left: 0vh;
+  margin-right: 0vh;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  padding: 1vh;
   display: block;
 }
 
