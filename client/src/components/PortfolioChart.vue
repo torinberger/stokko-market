@@ -45,6 +45,8 @@ export default {
   mounted () {
     let self = this
 
+    console.log(`User id for history`, this.user)
+
     axios
       .get(`http://localhost:3000/api/users/get/user/transactions/${this.user}`, {
         headers: {
@@ -71,6 +73,10 @@ export default {
           })
 
           let userBal = 100
+
+          self.chartData.labels.push('Starting Balance')
+
+          self.chartData.datasets[0].data.push(Math.round(Number(userBal)))
 
           for (let i = 0; i < data.length; i++) {
             const point = data[i]
