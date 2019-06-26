@@ -17,6 +17,16 @@ function obj2Arr (obj, addTitle) {
   return arr
 }
 
+// async function getUserValue (database, user) {
+//   let bal = user.balance
+//
+//   await database
+//     .holdings
+//     .then(function () {
+//
+//     })
+// }
+
 module.exports = (database) => {
   const market = new Router()
 

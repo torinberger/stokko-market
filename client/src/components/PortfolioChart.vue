@@ -63,7 +63,7 @@ export default {
           console.log(data)
 
           self.chartData.datasets.push({
-            label: 'User Balance',
+            label: 'User Net Worth',
             borderColor: 'rgb(13, 71, 161)',
             pointBackgroundColor: 'rgb(179, 229, 252)',
             borderWidth: 2,
@@ -72,11 +72,23 @@ export default {
             data: []
           })
 
+          self.chartData.datasets.push({
+            label: 'User Balance',
+            borderColor: 'rgb(13, 71, 161)',
+            pointBackgroundColor: 'rgb(179, 229, 252)',
+            borderWidth: 2,
+            pointBorderColor: 'rgb(179, 229, 252)',
+            backgroundColor: 'rgb(222, 222, 222)',
+            data: []
+          })
+
           let userBal = 100
+          let assetBal = 0
 
           self.chartData.labels.push('Starting Balance')
 
           self.chartData.datasets[0].data.push(Math.round(Number(userBal)))
+          self.chartData.datasets[1].data.push(Math.round(Number(userBal)))
 
           for (let i = 0; i < data.length; i++) {
             const point = data[i]
@@ -84,6 +96,8 @@ export default {
             console.log('before', userBal)
             console.log(point)
             userBal = userBal + (point.type === 'buy' ? -(point.price * point.amount) : (point.price * point.amount))
+            assetBal = assetBal + (point.type === 'buy' ? (point.price * point.amount) : -(point.price * point.amount))
+            let value = userBal + assetBal
             console.log('after', userBal)
 
             let cleanTime =
@@ -93,7 +107,8 @@ export default {
 
             self.chartData.labels.push(cleanTime)
 
-            self.chartData.datasets[0].data.push(Math.round(Number(userBal)))
+            self.chartData.datasets[0].data.push(Math.round(Number(value)))
+            self.chartData.datasets[1].data.push(Math.round(Number(userBal)))
           }
 
           self.ready = true
