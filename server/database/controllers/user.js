@@ -1,12 +1,12 @@
 const User = require('../models/user')
 
-// Structure
+// # Structure
 //  class
 //    .function(params)
 //    .then(callback)
 //    .err(callback)
 
-// Methods
+// # Methods
 //  GET -> getUsers ()
 //  GET -> getUserByID (id)
 //  GET -> getUser (target)

@@ -17,7 +17,7 @@ mongoose.connection.once('open', function () {
 })
 
 module.exports = function () {
-  return {
+  return { // return all model controllers for server to use
     user: require('./controllers/user.js'),
     stock: require('./controllers/stock.js'),
     holding: require('./controllers/holding.js'),

@@ -1,33 +1,36 @@
 
+// import all frameworks
 const Koa = require('koa')
 const Router = require('koa-router')
 const cors = require('koa-cors')
 const jwt = require('koa-jwt')
 const bodyParser = require('koa-bodyparser')
 
+// import all local frameworks
 const marketAPI = require('./api/market')
 const authAPI = require('./api/auth')
 const userAPI = require('./api/users')
 const database = require('./database')()
 
+// define koa app
 const app = new Koa()
 app
   .use(cors())
   .use(bodyParser())
 
-app
+app // init JWT auth token manager
   .use(jwt({
     secret: require('./private.json').jwt.key
   }).unless({
-    path: [
+    path: [ // provide excluded paths
       /^\/api\/auth\/*/,
       /^\/api\/market\/get\/*/,
       /^\/api\/users\/get\/*/
     ]
   }))
 
-const server = new Router()
-const api = new Router({
+const server = new Router() // set up router
+const api = new Router({ // set up api router
   prefix: '/api'
 })
 
@@ -46,5 +49,6 @@ api.use('/users', users.routes())
 // link api routes
 server.use(api.routes(), api.allowedMethods())
 
+// link server router to server
 app.use(server.routes())
-app.listen(3000)
+app.listen(3000) // start listening

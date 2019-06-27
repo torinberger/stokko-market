@@ -1,17 +1,17 @@
 const Holding = require('../models/holding')
 
-// Structure
+// # Structure
 //  class
 //    .function(params)
 //    .then(callback)
 //    .err(callback)
 
-// Methods
+// # Methods
 //  GET -> getHoldings ()
 //  GET -> getHoldingByID (id)
 //  GET -> getHolding (target)
 //  ADD -> addHolding (target)
-//  PUT -> updateHolding (id, changes)
+//  PUT -> updateHolding (userID, stock, changes)
 
 module.exports = function () {
   return {

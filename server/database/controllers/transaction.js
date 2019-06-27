@@ -1,12 +1,12 @@
 const Transaction = require('../models/transaction')
 
-// Structure
+// # Structure
 //  class
 //    .function(params)
 //    .then(callback)
 //    .err(callback)
 
-// Methods
+// # Methods
 //  GET -> getTransactions ()
 //  GET -> getTransactionByID (id)
 //  GET -> getTransaction (target)

@@ -1,12 +1,12 @@
 const Stock = require('../models/stock')
 
-// Structure
+// # Structure
 //  class
 //    .function(params)
 //    .then(callback)
 //    .err(callback)
 
-// Methods
+// # Methods
 //  GET -> getStocks ()
 //  GET -> getStockByID (id)
 //  GET -> getStock (target)
