@@ -1,18 +1,20 @@
 <template>
-  <div class="portfolio-page">
-    <div v-if="ready" class="container">
-      <h3>{{ user.username }}<h5>#{{ user._id }}</h5></h3><span>${{ Math.round(user.balance * 100) / 100 }}</span>
-      <portfolio-chart :user="user._id"></portfolio-chart>
-    </div>
-    <div v-if="!ready" class="loading-container">
-      <q-circular-progress
-        v-if="!err"
-        indeterminate
-        size="40px"
-        color="blue-6"
-        class="q-ma-md"
-      />
-      <h4 :if="err">{{ err }}</h4>
+  <div class="flex flex-center">
+    <div class="portfolio-page">
+      <div v-if="ready" class="container">
+        <h5 style="float: right;">${{ Math.round(user.balance * 100) / 100 }}</h5><h3>{{ user.username }}</h3><p>#{{ user._id }}</p>
+        <portfolio-chart :user="user._id"></portfolio-chart>
+      </div>
+      <div v-if="!ready" class="loading-container">
+        <q-circular-progress
+          v-if="!err"
+          indeterminate
+          size="40px"
+          color="blue-6"
+          class="q-ma-md"
+        />
+        <h4 :if="err">{{ err }}</h4>
+      </div>
     </div>
   </div>
 </template>
@@ -106,5 +108,22 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+h3 {
+  margin: 0;
+  margin-top: 5vh;
+  margin-bottom: 1vh;
+}
+
+h5 {
+  margin: 2vh;
+}
+
+p {
+  font-size: 2vh;
+  color: grey;
+  margin: 0;
+  margin-bottom: 3vh;
 }
 </style>

@@ -378,7 +378,7 @@ export default {
   background: #212733;
 }
 
-#stock-info h4, p {
+#stock-info > h4, #stock-info > p {
   margin: 1vh;
   width: auto;
   color: white;
@@ -389,6 +389,10 @@ export default {
   font-size: 2vh;
   color: lightgrey;
   width: auto;
+}
+
+.q-card {
+  overflow: hidden;
 }
 
 </style>
