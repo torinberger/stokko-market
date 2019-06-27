@@ -8,7 +8,7 @@
           class="rank self-center"
           v-bind:key="user._id"
           v-for="(user, index) in leaderboard"
-          v-bind:style="{ background: (userID === user._id ? '#027BE3' : 'white') }"
+          v-bind:style="{ background: (userID === user._id ? '#027BE3' : 'white'), color: (userID === user._id ? 'white' : 'black') }"
           elevated
         >
           <span>{{ index+1 }}. </span><span>{{ user.username }}<span style="float: right;">${{ Math.round(user.balance * 100) / 100 }}</span></span>
@@ -111,7 +111,7 @@ export default {
 
 .leaderboard-container {
   margin-top: 5vh;
-  background: grey;
+  background: white;
   width: 40vw;
   padding: 2vw;
   margin-left: calc(calc(100vw - 44vw) / 2);
@@ -123,8 +123,12 @@ export default {
   margin-left: 0vh;
   margin-right: 0vh;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-  padding: 1vh;
+  padding: 2vh;
   display: block;
+}
+
+h3 {
+  color: black;
 }
 
 a {
