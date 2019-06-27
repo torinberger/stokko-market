@@ -83,7 +83,8 @@ export default {
           })
 
           let userBal = 100
-          let assetBal = 0
+
+          let holdings = []
 
           self.chartData.labels.push('Starting Balance')
 
@@ -92,13 +93,44 @@ export default {
 
           for (let i = 0; i < data.length; i++) {
             const point = data[i]
-
-            console.log('before', userBal)
             console.log(point)
+
+            if (point.type === 'buy') {
+              let found = false
+              for (let n = 0; n < holdings.length; n++) {
+                if (holdings[n].id === point.stock) {
+                  holdings[n].amount += point.amount
+                  holdings[n].price = point.price
+                  found = true
+                }
+              }
+              if (!found) {
+                holdings.push({
+                  id: point.stock,
+                  amount: point.amount,
+                  price: point.price
+                })
+              }
+            } else if (point.type === 'sell') {
+              for (let n = 0; n < holdings.length; n++) {
+                if (holdings[n].id === point.stock) {
+                  holdings[n].amount -= point.amount
+                  holdings[n].price = point.price
+                }
+              }
+            }
+
+            console.log(holdings)
+
             userBal = userBal + (point.type === 'buy' ? -(point.price * point.amount) : (point.price * point.amount))
-            assetBal = assetBal + (point.type === 'buy' ? (point.price * point.amount) : -(point.price * point.amount))
+
+            let assetBal = 0
+
+            for (let n = 0; n < holdings.length; n++) {
+              assetBal += (holdings[n].amount * holdings[n].price)
+            }
+
             let value = userBal + assetBal
-            console.log('after', userBal)
 
             let cleanTime =
               new Date(Number(point.date)).getFullYear() + '-' +
