@@ -74,11 +74,11 @@ export default {
 
           self.chartData.datasets.push({
             label: 'User Balance',
-            borderColor: 'rgb(13, 71, 161)',
-            pointBackgroundColor: 'rgb(179, 229, 252)',
+            borderColor: 'rgb(56, 71, 255)',
+            pointBackgroundColor: 'rgb(34, 23, 255)',
             borderWidth: 2,
-            pointBorderColor: 'rgb(179, 229, 252)',
-            backgroundColor: 'rgb(222, 222, 222)',
+            pointBorderColor: 'rgb(34, 45, 255)',
+            backgroundColor: 'rgb(24, 60, 225)',
             data: []
           })
 
@@ -176,13 +176,13 @@ export default {
   .chart-err-container {
     width: 100vw;
     height: 60vh;
-    background: #212733;
+    background: #ffffff;
   }
 
   .chart-loading-container {
     width: 100vw;
     height: 60vh;
-    background: #212733;
+    background: #ffffff;
   }
 }
 
@@ -194,19 +194,19 @@ export default {
   .chart-err-container {
     width: 50vw;
     height: 400px;
-    background: #212733;
+    background: #ffffff;
   }
 
   .chart-loading-container {
     width: 50vw;
     height: 400px;
-    background: #212733;
+    background: #ffffff;
   }
 }
 
 .container {
   display: inline-block;
-  background: #212733;
+  background: #ffffff;
 }
 
 .portfolio-chart {

@@ -25,7 +25,14 @@
     </q-select>
 
     <div id="stock-chart-list" v-bind:key="currentStock" v-for="currentStock in stocks" elevated>
-      <q-select v-model="timeInterval" @input="changeInterval" :options="['Hourly', 'Daily', 'Weekly', 'Monthly']"></q-select>
+      <q-select
+        filled
+        v-model="timeInterval"
+        @input="changeInterval"
+        :options="['Hourly', 'Daily', 'Weekly', 'Monthly']"
+      >
+
+      </q-select>
       <stock-chart :stock="currentStock" :timeInterval="timeInterval"></stock-chart>
     </div>
 
@@ -36,7 +43,7 @@
         <q-btn label="Buy" :disabled="disableInput || Math.floor(balance / currentStockPrice) <= 0" color="primary" @click="alertBuy = true" />
         <q-btn label="Sell" :disabled="disableInput" v-if="maxToSell >= 1" color="primary" @click="alertSell = true" />
 
-        <p v-if="userHolding && maxToSell >= 1">You own {{ userHolding.amount }} shares of this stock.</p>
+        <p v-if="userHolding && maxToSell >= 1">You own {{ userHolding.amount }} share{{ userHolding.amount > 1 ? 's' : '' }} of this stock.</p>
 
         <q-dialog v-model="alertBuy">
           <q-card>
@@ -375,19 +382,20 @@ export default {
   float: right;
   margin: 1vh;
   margin-left: 0;
-  background: #212733;
+  background: rgb(0, 0, 0, 0.05);
+  border-radius: 2px;
 }
 
 #stock-info > h4, #stock-info > p {
   margin: 1vh;
   width: auto;
-  color: white;
+  color: black;
 }
 
 #stock-info span {
   margin: 0.5vh;
   font-size: 2vh;
-  color: lightgrey;
+  color: grey;
   width: auto;
 }
 
