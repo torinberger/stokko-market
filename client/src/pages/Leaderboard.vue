@@ -56,7 +56,6 @@ export default {
         .then((response) => {
           let user = response.data[0]
           self.userID = user._id
-          console.log('User', user)
           self.$store.commit('updateBalance', user.balance)
           self.loadBoard()
         })

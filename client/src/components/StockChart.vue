@@ -58,7 +58,6 @@ export default {
         } else {
           console.log('Received stock history')
           let data = response.data
-          console.log(data)
 
           if (response.data.type === 'err') {
             this.errorMsg = 'Couldn\'t Find Stock'

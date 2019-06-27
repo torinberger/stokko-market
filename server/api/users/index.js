@@ -15,7 +15,6 @@ module.exports = (database) => {
         ctx.body = user
       })
       .catch((err) => {
-        console.log(err)
         ctx.body = 500
         ctx.body = err
       })

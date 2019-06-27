@@ -36,7 +36,7 @@ export default {
     }
   },
   created () {
-    console.log('user', this.$route.params.user)
+    console.log('User route param:', this.$route.params.user)
     let user = this.$route.params.user
 
     if (user === undefined) {
@@ -47,7 +47,7 @@ export default {
   },
   methods: {
     loadSelf (id) {
-      console.log('user id', id)
+      console.log('User id', id)
       if (id === '') {
         this.$router.push('/auth/login')
       } else {
@@ -61,7 +61,6 @@ export default {
           })
           .then((response) => {
             let user = response.data[0]
-            console.log('User', user)
             self.user = user
             self.ready = true
             self.$store.commit('updateBalance', user.balance)
@@ -71,7 +70,7 @@ export default {
           })
       }
     },
-    loadOther (user) {
+    loadOther (user) { // # FIX # make more effecient by searching for particular user
       let self = this
       axios
         .get(`http://localhost:3000/api/users/get/users/`, {
@@ -82,7 +81,6 @@ export default {
         })
         .then((response) => {
           let users = response.data
-          console.log('Users', users)
 
           for (var i = 0; i < users.length; i++) {
             if (users[i].username === user) {

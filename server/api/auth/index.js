@@ -26,7 +26,7 @@ module.exports = (database) => {
         }
       })
       .catch((err) => {
-        console.log(err)
+        console.log('Error logging in',err)
         ctx.status = 500
         ctx.body = 'Server Error!'
       })
@@ -40,8 +40,7 @@ module.exports = (database) => {
   auth.post('/create', async (ctx) => {
     const userDetails = ctx.request.body
 
-    console.log('Request to create user:')
-    console.log(userDetails)
+    console.log('Request to create user:', userDetails)
 
     if (!userDetails.username || !userDetails.password) {
       ctx.body = new Response('err', 'Missing Register Details!')
@@ -60,7 +59,7 @@ module.exports = (database) => {
           }
         })
         .catch((err) => {
-          console.log(err)
+          console.log('Error registering', err)
           ctx.status = 500
           ctx.body = 'Server Error!'
         })

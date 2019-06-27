@@ -120,7 +120,6 @@ export default {
 
     if (this.stocks[0] === undefined) {
       this.stocks = []
-      console.log('echign')
       this.checkBalance()
     }
 
@@ -151,7 +150,6 @@ export default {
   },
   methods: {
     changeInterval () {
-      console.log('change')
       let currentStocks = this.stocks
       this.stocks = []
       let self = this
@@ -178,7 +176,6 @@ export default {
           })
           .then((response) => {
             let user = response.data[0]
-            console.log('User', user)
             self.$store.commit('updateBalance', user.balance)
           })
       }
@@ -227,13 +224,12 @@ export default {
             } else {
               console.log('Received stock history')
               let stockHistory = response.data
-              console.log(stockHistory)
               self.currentStockPrice = stockHistory[0]['5. adjusted close']
               console.log('Current stock pice', self.currentStockPrice)
             }
           })
           .catch((err) => {
-            console.log(err)
+            console.log('Error getting stock', err)
             self.$q.notify({ message: 'Error getting stock data!', color: 'red' })
           })
       }
@@ -254,7 +250,7 @@ export default {
               axios
                 .get(`http://localhost:3000/api/market/get/holdings/${this.$store.state.user}`)
                 .then((holdings) => {
-                  console.log('Users holdings ', holdings.data)
+                  console.log('Users holdings', holdings.data)
                   this.disableInput = false
 
                   let userHoldings = holdings.data
@@ -288,7 +284,7 @@ export default {
 
       this.disableInput = true
 
-      console.log('Buying stock of id', this.stockMetaData._id)
+      console.log('Buying stock of id', this.stockMetaData._id, 'times', this.amountToBuy)
 
       axios
         .post(`http://localhost:3000/api/market/buy/stock/${this.stocks[0]}`, {
@@ -305,7 +301,6 @@ export default {
           }
         })
         .then(function (response) {
-          console.log('Bought stock')
           self.$q.notify({ message: 'Stock bought succesfully!', color: 'green' })
           self.alertBuy = false
           self.amountToBuy = 1
@@ -345,7 +340,6 @@ export default {
           }
         })
         .then(function (response) {
-          console.log('Sold stock succesfully')
           self.$q.notify({ message: 'Stock sold succesfully!', color: 'green' })
           self.alertSell = false
           self.disableInput = false

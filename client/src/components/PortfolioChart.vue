@@ -45,7 +45,7 @@ export default {
   mounted () {
     let self = this
 
-    console.log(`User id for history`, this.user)
+    console.log(`User id for portfolio`, this.user)
 
     axios
       .get(`http://localhost:3000/api/users/get/user/transactions/${this.user}`, {
@@ -58,9 +58,8 @@ export default {
         if (response.data.type === 'err') {
           self.$q.notify({ message: 'Error getting stock data!', color: 'red' })
         } else {
-          console.log('Received user history')
+          console.log('Received user\'s transactions')
           let data = response.data
-          console.log(data)
 
           self.chartData.datasets.push({
             label: 'User Net Worth',
@@ -93,7 +92,6 @@ export default {
 
           for (let i = 0; i < data.length; i++) {
             const point = data[i]
-            console.log(point)
 
             if (point.type === 'buy') {
               let found = false
@@ -119,8 +117,6 @@ export default {
                 }
               }
             }
-
-            console.log(holdings)
 
             userBal = userBal + (point.type === 'buy' ? -(point.price * point.amount) : (point.price * point.amount))
 

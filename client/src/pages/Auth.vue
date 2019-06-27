@@ -88,7 +88,7 @@ export default {
       let self = this
 
       console.log('Registering...')
-      console.log({
+      console.log('User details:', {
         username: self.username,
         password: String(sha256(String(self.password)))
       })
@@ -121,7 +121,7 @@ export default {
       let self = this
 
       console.log('Logging In...')
-      console.log({
+      console.log('User details:', {
         username: self.username,
         password: String(sha256(String(self.password)))
       })
