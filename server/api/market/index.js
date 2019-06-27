@@ -24,16 +24,6 @@ function getKey() {
   return require('../../private').api.keys[inc]
 }
 
-// async function getUserValue (database, user) {
-//   let bal = user.balance
-//
-//   await database
-//     .holdings
-//     .then(function () {
-//
-//     })
-// }
-
 module.exports = (database) => {
   const market = new Router()
 
