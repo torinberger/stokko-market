@@ -17,6 +17,13 @@ function obj2Arr (obj, addTitle) {
   return arr
 }
 
+var inc = 0
+function getKey() {
+  inc = inc+1 > require('../../private').api.keys.length ? 0 : inc+1
+  console.log(require('../../private').api.keys[inc])
+  return require('../../private').api.keys[inc]
+}
+
 // async function getUserValue (database, user) {
 //   let bal = user.balance
 //
@@ -58,10 +65,8 @@ module.exports = (database) => {
     let stockSymbol = ctx.params.stock
     let timeInterval = ctx.params.time
 
-    const key = require('../../private').api.key
-
     await axios
-      .get(`https://www.alphavantage.co/query?function=TIME_SERIES_${timeInterval == 'INTRADAY' ? timeInterval : timeInterval + '_ADJUSTED'}&symbol=${stockSymbol}&apikey=${key}&interval=60min`)
+      .get(`https://www.alphavantage.co/query?function=TIME_SERIES_${timeInterval == 'INTRADAY' ? timeInterval : timeInterval + '_ADJUSTED'}&symbol=${stockSymbol}&apikey=${getKey()}&interval=60min`)
       .then(async (response) => {
         let history = response.data
         console.log(response.data.note ? response.data.note : 'Requested Stock!')
@@ -112,7 +117,7 @@ module.exports = (database) => {
     console.log(stockSymbol)
 
     await axios
-      .get(`https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=${stockSymbol}&apikey=${serverPrivate.api.key}&interval=60min`)
+      .get(`https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=${stockSymbol}&apikey=${getKey()}&interval=60min`)
       .then(async (response) => {
         let history = response.data
         console.log(response.data.note ? response.data.note : 'Requested Stock!')
@@ -182,7 +187,7 @@ module.exports = (database) => {
     console.log('amount to sell', holding.amount)
 
     await axios
-      .get(`https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=${stockSymbol}&apikey=${serverPrivate.api.key}&interval=60min`)
+      .get(`https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=${stockSymbol}&apikey=${getKey()}&interval=60min`)
       .then(async (response) => {
         let history = response.data
         console.log(response.data.note ? response.data.note : 'Requested Stock!')
