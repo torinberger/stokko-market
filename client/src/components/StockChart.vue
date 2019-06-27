@@ -45,25 +45,21 @@ export default {
   mounted () {
     let self = this
 
-    axios
+    axios // get stock history
       .get(`http://localhost:3000/api/market/get/stockHistory/${this.stock}/${this.timeInterval === 'Hourly' ? 'INTRADAY' : this.timeInterval.toUpperCase()}`, {
         headers: {
           'Access-Control-Allow-Origin': '*',
-          'Authorization': 'Bearer ' + self.$store.state.JWTtoken
+          'Authorization': 'Bearer ' + self.$store.state.JWTtoken // give auth token
         }
       })
       .then((response) => {
-        if (response.data.type === 'err') {
+        if (response.data.type === 'err') { // if err getting stock
           self.$q.notify({ message: 'Error getting stock data!', color: 'red' })
-        } else {
+        } else { // if no err
           console.log('Received stock history')
           let data = response.data
 
-          if (response.data.type === 'err') {
-            this.errorMsg = 'Couldn\'t Find Stock'
-            this.ready = true
-          }
-
+          // add line to hold data of history
           self.chartData.datasets.push({
             label: self.stock,
             borderColor: 'rgb(56, 71, 255)',
@@ -74,23 +70,24 @@ export default {
             data: []
           })
 
+          // go through each point in time and add it to the table
           for (let i = 0; i < data.length; i++) {
             const point = data[i]
 
             let cleanTime = point['0. date']
 
-            self.chartData.labels.push(cleanTime)
-            if (this.timeInterval === 'Hourly') {
+            self.chartData.labels.push(cleanTime) // display time
+            if (this.timeInterval === 'Hourly') { // display price dependent on chart time interval
               self.chartData.datasets[0].data.push(Math.round(Number(point['4. close'])))
             } else {
               self.chartData.datasets[0].data.push(Math.round(Number(point['5. adjusted close'])))
             }
           }
 
-          self.ready = true
+          self.ready = true // ready chart
         }
       })
-      .catch((err) => {
+      .catch((err) => { // if error getting stock history
         console.log('Error in getting stock history', err)
         this.errorMsg = 'Couldn\'t Find Stock'
         this.ready = true

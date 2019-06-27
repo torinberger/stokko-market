@@ -37,7 +37,7 @@ export default {
   name: 'Leaderboard',
   data () {
     return {
-      userID: null,
+      userID: null, // user ID to check which user to highlight as self
       leaderboard: [],
       ready: false,
       err: ''
@@ -45,32 +45,32 @@ export default {
   },
   created () {
     let self = this
-    if (self.$store.state.user) {
+    if (self.$store.state.user) { // check if user is logged in
       axios
         .get(`http://localhost:3000/api/users/get/user/${self.$store.state.user}`, {
           headers: {
             'Access-Control-Allow-Origin': '*',
-            'Authorization': 'Bearer ' + self.$store.state.JWTtoken
+            'Authorization': 'Bearer ' + self.$store.state.JWTtoken // give auth token
           }
         })
         .then((response) => {
-          let user = response.data[0]
-          self.userID = user._id
-          self.$store.commit('updateBalance', user.balance)
-          self.loadBoard()
+          let user = response.data[0] // get user data
+          self.userID = user._id // set user id
+          self.$store.commit('updateBalance', user.balance) // update user balance
+          self.loadBoard() // load the leaderboard
         })
-        .catch((err) => {
+        .catch((err) => { // if error getting the user
           self.err = err
         })
     } else {
-      self.loadBoard()
+      self.loadBoard() // if user not logged in just load the leaderboard
     }
   },
   methods: {
-    loadBoard () {
+    loadBoard () { // when user is found or not found, load the leaderboard
       let self = this
       axios
-        .get(`http://localhost:3000/api/users/get/users/`, {
+        .get(`http://localhost:3000/api/users/get/users/`, { // get all users
           headers: {
             'Access-Control-Allow-Origin': '*'
           }
@@ -78,7 +78,7 @@ export default {
         .then((response) => {
           let users = response.data
 
-          users.sort(function (a, b) {
+          users.sort(function (a, b) { // sort users from highest balance to lowest
             if (a.balance > b.balance) {
               return -1
             } else if (a.balance === b.balance) {
@@ -88,11 +88,11 @@ export default {
             }
           })
 
-          self.leaderboard = users
-          self.ready = true
+          self.leaderboard = users // display users
+          self.ready = true // ready the leaderboard
         })
         .catch((err) => {
-          self.err = err
+          self.err = err // if error display the error
         })
     }
   }

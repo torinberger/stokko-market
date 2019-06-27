@@ -40,10 +40,23 @@
       <h4>{{ stockMetaData.name }}<span> [{{ stockMetaData.symbol }}]</span><span style="float: right;">${{ currentStockPrice }}</span></h4>
       <p>{{ stockMetaData.description }}</p>
       <div id="stock-interactions" v-if='authenticated'>
-        <q-btn label="Buy" :disabled="disableInput || Math.floor(balance / currentStockPrice) <= 0" color="primary" @click="alertBuy = true" />
-        <q-btn label="Sell" :disabled="disableInput" v-if="maxToSell >= 1" color="primary" @click="alertSell = true" />
+        <q-btn
+          label="Buy"
+          :disabled="disableInput || Math.floor(balance / currentStockPrice) <= 0"
+          color="primary"
+          @click="alertBuy = true"
+        />
+        <q-btn
+          label="Sell"
+          :disabled="disableInput"
+          v-if="maxToSell >= 1"
+          color="primary"
+          @click="alertSell = true"
+        />
 
-        <p v-if="userHolding && maxToSell >= 1">You own {{ userHolding.amount }} share{{ userHolding.amount > 1 ? 's' : '' }} of this stock.</p>
+        <p
+          v-if="userHolding && maxToSell >= 1"
+        >You own {{ userHolding.amount }} share{{ userHolding.amount > 1 ? 's' : '' }} of this stock.</p>
 
         <q-dialog v-model="alertBuy">
           <q-card>
@@ -56,7 +69,18 @@
             </q-card-section>
 
             <q-card-actions align="right">
-              <q-input type="number" @input="checkValidNumber(Math.floor(balance / currentStockPrice), 1)" filled :max="Math.floor(balance / currentStockPrice)" min="1" v-model="amountToBuy"></q-input> <q-btn @click="buyStock" :disabled="disableInput || amountToBuy <= 0" name="buy">Buy</q-btn>
+              <q-input
+                type="number"
+                @input="checkValidNumber(Math.floor(balance / currentStockPrice), 1)"
+                filled :max="Math.floor(balance / currentStockPrice)"
+                min="1"
+                v-model="amountToBuy"
+              ></q-input>
+              <q-btn
+                @click="buyStock"
+                :disabled="disableInput || amountToBuy <= 0"
+                name="buy"
+              >Buy</q-btn>
             </q-card-actions>
           </q-card>
         </q-dialog>
@@ -72,7 +96,17 @@
             </q-card-section>
 
             <q-card-actions align="right">
-              <q-input type="number" filled :max="maxToSell" @input="checkValidNumber(maxToSell, 1)" min="1" v-model="amountToBuy"></q-input> <q-btn @click="sellStock" :disabled="disableInput || amountToBuy <= 0" name="buy">Sell</q-btn>
+              <q-input
+                type="number"
+                filled :max="maxToSell"
+                @input="checkValidNumber(maxToSell, 1)" min="1"
+                v-model="amountToBuy"
+              ></q-input>
+              <q-btn
+                @click="sellStock"
+                :disabled="disableInput || amountToBuy <= 0"
+                name="buy"
+              >Sell</q-btn>
             </q-card-actions>
           </q-card>
         </q-dialog>
@@ -106,26 +140,26 @@ export default {
       alertSell: false, // sell popup
       stockMetaData: null, // meta data for current stock { symbol, desc, etc }
       authenticated: false, // boolean for whether the user is logged in or not.
-      timeInterval: 'Monthly'
+      timeInterval: 'Monthly' // time period to load stock history at
     }
   },
   computed: {
     balance () {
-      return this.$store.state.balance
+      return this.$store.state.balance // constantly keep user balance updated
     }
   },
-  created () {
-    this.stocks = [this.$route.params.stock]
-    this.disableInput = true
+  created () { // when module loaded
+    this.stocks = [this.$route.params.stock] // get current stock based on param
+    this.disableInput = true // disable all input to prevent bugs
 
-    if (this.stocks[0] === undefined) {
+    if (this.stocks[0] === undefined) { // redirect if stock is unkown
       this.stocks = []
       this.checkBalance()
     }
 
     let self = this
 
-    axios
+    axios // get all stocks meta data
       .get(`http://localhost:3000/api/market/get/stocks/`, {
         headers: {
           'Access-Control-Allow-Origin': '*',
@@ -136,38 +170,43 @@ export default {
         console.log('Found all stocks:', response.data)
         let stocks = []
 
+        // get all meta data for all stocks
         for (let i = 0; i < response.data.length; i++) {
           stocks.push(response.data[i].symbol)
         }
 
+        // store data
         self.stocksMetaData = response.data
         self.stockOptions = self.staticOptions = stocks
 
+        // if stocks have been found, load the current stock
         if (self.stocks.length !== 0) {
           self.requestStock(this.stocks[0])
         }
       })
   },
   methods: {
-    changeInterval () {
-      let currentStocks = this.stocks
-      this.stocks = []
+    changeInterval () { // if the user changes the time period to display on the stock graph
+      let currentStocks = this.stocks // get current stock
+      this.stocks = [] // reset stocks
       let self = this
       setTimeout(function () {
-        self.stocks = currentStocks
+        self.stocks = currentStocks // after 10ms, load back in same data
       }, 10)
+
+      // THIS REFRESHES THE CHART TO UPDATE PARAMETERS
     },
-    checkValidNumber (max, min) {
+    checkValidNumber (max, min) { // check if user input is within the range
       if (this.amountToBuy > max) {
         this.amountToBuy = max
       } else if (this.amountToBuy < min) {
         this.amountToBuy = min
       }
     },
-    checkBalance () {
+    checkBalance () { // check the user's balance
       let self = this
-      if (self.$store.state.user) {
-        axios
+      if (self.$store.state.user) { // if user logged in
+        axios // get user
           .get(`http://localhost:3000/api/users/get/user/${self.$store.state.user}`, {
             headers: {
               'Access-Control-Allow-Origin': '*',
@@ -175,89 +214,91 @@ export default {
             }
           })
           .then((response) => {
-            let user = response.data[0]
+            let user = response.data[0] // set user and update balance globally
             self.$store.commit('updateBalance', user.balance)
           })
       }
     },
-    requestStock (input) {
+    requestStock (input) { // request current stock and display info
       const stock = String(input).toUpperCase()
 
       this.disableInput = true
-      this.userHolding = null
+      this.userHolding = null // reset meta variables
       this.maxToSell = 0
 
-      this.stocks = []
-      this.stocks = [stock]
+      this.stocks = [] // empty chart
+      this.stocks = [stock] // refresh chart to new stock
 
       console.log('Requesting current stock', this.stocks)
 
-      history.pushState(
+      history.pushState( // redirect to correct URL
         { urlPath: `/#/stock/${stock}` },
         '',
         `/#/stock/${stock}`
       )
 
-      this.checkBalance()
+      this.checkBalance() // update user balance
 
       let self = this
 
+      // go through each stock's meta data
       for (let i = 0; i < self.stocksMetaData.length; i++) {
         const target = self.stocksMetaData[i]
 
-        if (target.symbol === self.stocks[0]) {
+        if (target.symbol === self.stocks[0]) { // find current stock's meta data
           self.stockMetaData = target
         }
       }
 
-      if (this.stocks.length >= 1) {
+      if (this.stocks.length >= 1) { // check there is a selected stock
         axios
-          .get(`http://localhost:3000/api/market/get/stockHistory/${this.stocks[0]}/DAILY`, {
+          .get(`http://localhost:3000/api/market/get/stockHistory/${this.stocks[0]}/DAILY`, { // get daily stock history
             headers: {
               'Access-Control-Allow-Origin': '*',
-              'Authorization': 'Bearer ' + self.$store.state.JWTtoken
+              'Authorization': 'Bearer ' + self.$store.state.JWTtoken // give auth token
             }
           })
           .then((response) => {
-            if (response.data.type === 'err') {
+            if (response.data.type === 'err') { // if error getting stock data, display err
               self.$q.notify({ message: 'Error getting stock data!', color: 'red' })
             } else {
               console.log('Received stock history')
-              let stockHistory = response.data
-              self.currentStockPrice = stockHistory[0]['5. adjusted close']
+              let stockHistory = response.data // store stock history
+              self.currentStockPrice = stockHistory[0]['5. adjusted close'] // get current stock value
               console.log('Current stock pice', self.currentStockPrice)
             }
           })
-          .catch((err) => {
+          .catch((err) => { // if error getting stock history, display err
             console.log('Error getting stock', err)
             self.$q.notify({ message: 'Error getting stock data!', color: 'red' })
           })
       }
 
-      if (self.$store.state.JWTtoken) {
+      if (self.$store.state.JWTtoken) { // if user logged in
         axios
-          .get('http://localhost:3000/api/auth/validate', {
+          .get('http://localhost:3000/api/auth/validate', { // check if user valid
             headers: {
               'Access-Control-Allow-Origin': '*',
-              'Authorization': 'Bearer ' + self.$store.state.JWTtoken
+              'Authorization': 'Bearer ' + self.$store.state.JWTtoken // give auth token
             }
           })
           .then((response) => {
-            if (response.data === 'Validated') {
-              self.authenticated = true
+            if (response.data === 'Validated') { // check validated
+              self.authenticated = true // tell page that user can buy/sell stocks
               console.log('User is authenticated')
 
-              axios
+              axios // get user's holdings
                 .get(`http://localhost:3000/api/market/get/holdings/${this.$store.state.user}`)
                 .then((holdings) => {
                   console.log('Users holdings', holdings.data)
-                  this.disableInput = false
+                  this.disableInput = false // enable the user to user buy/sell buttons
 
                   let userHoldings = holdings.data
 
+                  // go though all user's holdings
                   for (var i = 0; i < userHoldings.length; i++) {
                     if (userHoldings[i].stock === self.stockMetaData._id) {
-                      console.log('User owns current stock')
+                      console.log('User owns current stock') // find current stock holding and amount
                       self.userHolding = userHoldings[i]
                       self.maxToSell = userHoldings[i].amount
                       console.log('Maximum user can sell of stock', self.maxToSell)
@@ -265,92 +306,94 @@ export default {
                   }
                 })
             } else {
-              self.authenticated = false
+              self.authenticated = false // if user unauthorised do not allow to buy/sell stocks
             }
           })
       } else {
-        self.authenticated = false
+        self.authenticated = false // if no token provided, do not let user buy/sell stocks
       }
     },
-    filterFn (val, update, abort) {
+    filterFn (val, update, abort) { // used for the stock search bar, displays options depenedent on what has been typed
       let self = this
       update(() => {
         const needle = val.toLowerCase()
         this.stockOptions = self.staticOptions.filter(v => v.toLowerCase().indexOf(needle) > -1)
       })
     },
-    buyStock () {
+    buyStock () { // when user tries to buy an amount of a stock
       let self = this
 
-      this.disableInput = true
+      this.disableInput = true // disable input to prevent spamming
 
       console.log('Buying stock of id', this.stockMetaData._id, 'times', this.amountToBuy)
 
-      axios
+      axios // ask server to buy stock
         .post(`http://localhost:3000/api/market/buy/stock/${this.stocks[0]}`, {
-          holding: {
+          holding: { // provide transaction information
             amount: this.amountToBuy,
             stockID: this.stockMetaData._id
           },
-          user: this.$store.state.user
+          user: this.$store.state.user // give user ID
         },
         {
           headers: {
             'Access-Control-Allow-Origin': '*',
-            'Authorization': 'Bearer ' + this.$store.state.JWTtoken
+            'Authorization': 'Bearer ' + this.$store.state.JWTtoken // provide auth token
           }
         })
         .then(function (response) {
+          // notify all is well
           self.$q.notify({ message: 'Stock bought succesfully!', color: 'green' })
-          self.alertBuy = false
+          self.alertBuy = false // reset meta variables
           self.amountToBuy = 1
           self.disableInput = false
-          self.requestStock(self.stocks[0])
+          self.requestStock(self.stocks[0]) // update stock info
         })
-        .catch((err) => {
+        .catch((err) => { // if could not buy stock
           console.log('error in buying stock', err)
           let errCode = err.message.split(' ')[err.message.split(' ').length - 1]
 
-          if (errCode === '400') {
+          if (errCode === '400') { // if known error, display it
             self.$q.notify({ message: 'You do not have enough money!', color: 'red' })
-            self.alertBuy = false
+            self.alertBuy = false // reset meta variables
             self.disableInput = false
           }
         })
     },
-    sellStock () {
+    sellStock () { // if user tries to sell stock
       let self = this
 
-      this.disableInput = true
+      this.disableInput = true // disable buy/sell buttons
 
       console.log('Selling stock of id', this.stockMetaData._id, 'times', this.amountToBuy)
 
-      axios
+      axios // ask server to buy stock
         .post(`http://localhost:3000/api/market/sell/stock/${this.stocks[0]}`, {
-          holding: {
+          holding: { // give transaction information
             amount: this.amountToBuy,
             stockID: this.stockMetaData._id
           },
-          user: this.$store.state.user
+          user: this.$store.state.user // give user
         },
         {
           headers: {
             'Access-Control-Allow-Origin': '*',
-            'Authorization': 'Bearer ' + this.$store.state.JWTtoken
+            'Authorization': 'Bearer ' + this.$store.state.JWTtoken // give auth token
           }
         })
         .then(function (response) {
+          // notify all went well
           self.$q.notify({ message: 'Stock sold succesfully!', color: 'green' })
-          self.alertSell = false
+          self.alertSell = false // reset meta variables
           self.disableInput = false
           self.amountToBuy = 1
-          self.requestStock(self.stocks[0])
+          self.requestStock(self.stocks[0]) // update stock info
         })
-        .catch((err) => {
+        .catch((err) => { // if could not sell stock
           console.log('Error selling stock', err)
           let errCode = err.message.split(' ')[err.message.split(' ').length - 1]
 
-          if (errCode === '400') {
+          if (errCode === '400') { // if known error, display it
             self.$q.notify({ message: 'You do not have any of this stock!', color: 'red' })
             self.alertSell = false
             self.disableInput = false

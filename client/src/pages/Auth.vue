@@ -1,13 +1,5 @@
 <template>
   <div id="auth">
-    <!-- <div v-if="mode == 'login'" class="auth-tab">
-      <h3>Login</h3>
-      <p>Or <a @click="switchMode">Register</a></p>
-    </div>
-    <div v-if="mode == 'register'" class="auth-tab">
-      <h3>Register</h3>
-      <p>Or <a @click="switchMode">Login</a></p>
-    </div> -->
     <q-card class="auth-tab">
       <q-tabs
         v-model="mode"
@@ -58,24 +50,24 @@ export default {
   name: 'Auth',
   data () {
     return {
-      mode: this.$route.params.mode,
-      username: null,
+      mode: this.$route.params.mode, // mode either login or register for displaying different forms
+      username: null, // username and password to keep track of user input
       password: null
     }
   },
-  created () {
+  created () { // determine the mode from the URL parameters
     if (this.mode !== 'login' && this.mode !== 'register') {
       this.mode = 'login'
     }
 
-    history.pushState(
+    history.pushState( // redirect to correct URL
       { urlPath: `/#/auth/${this.mode}` },
       '',
       `/#/auth/${this.mode}`
     )
   },
   watch: {
-    mode (val) {
+    mode (val) { // if mode changes redirect accordingly
       history.pushState(
         { urlPath: `/#/auth/${val}` },
         '',
@@ -84,7 +76,7 @@ export default {
     }
   },
   methods: {
-    register () {
+    register () { // when user hits register form submit
       let self = this
 
       console.log('Registering...')
@@ -93,31 +85,33 @@ export default {
         password: String(sha256(String(self.password)))
       })
 
-      axios
+      axios // create a user account
         .post(`http://localhost:3000/api/auth/create`, {
           username: self.username,
           password: String(sha256(String(self.password)))
         })
         .then((response) => {
-          if (!response.data || !response.data.token) {
+          if (!response.data || !response.data.token) { // if err
             this.$q.notify({ message: 'Uknown Error!', color: 'orange' })
-          } else {
+          } else { // if no err
             this.$q.notify({ message: 'Succesfully Registered!', color: 'green' })
 
+            // update user meta data globally
             this.$store.commit('setJWTtoken', response.data.token)
             this.$store.commit('setUser', response.data.user._id)
             console.log('User token', this.$store.state.JWTtoken)
             console.log('User ID', this.$store.state.user)
 
+            // redirect to user portfolio
             self.$router.push('/portfolio/')
           }
-        }).catch(function (err) {
+        }).catch(function (err) { // if err
           console.log('Error registering user', err)
           self.$q.notify({ message: 'Username/Password Taken', color: 'red' })
-          this.password = ''
+          this.password = '' // reset password for security
         })
     },
-    login () {
+    login () { // if user tries to login
       let self = this
 
       console.log('Logging In...')
@@ -126,25 +120,27 @@ export default {
         password: String(sha256(String(self.password)))
       })
 
-      axios
+      axios // login server side
         .post(`http://localhost:3000/api/auth/login`, {
           username: self.username,
           password: String(sha256(String(self.password)))
         })
         .then((response) => {
-          if (!response.data || !response.data.token) {
+          if (!response.data || !response.data.token) { // if err
             this.$q.notify({ message: 'Uknown Error!', color: 'orange' })
-          } else {
+          } else { // if no err
             this.$q.notify({ message: 'Succesfully Logged In!', color: 'green' })
 
+            // update user meta data globally
             this.$store.commit('setJWTtoken', response.data.token)
             this.$store.commit('setUser', response.data.user._id)
             console.log('User token', this.$store.state.JWTtoken)
             console.log('User ID', this.$store.state.user)
 
+            // redirect to portfolio
             self.$router.push('/portfolio/')
           }
-        }).catch(function (err) {
+        }).catch(function (err) { // if error logging in
           console.log('Error logging in user', err)
           self.$q.notify({ message: 'Incorrect Username/Password!', color: 'red' })
           self.password = null

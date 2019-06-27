@@ -26,7 +26,7 @@ import axios from 'axios'
 export default {
   name: 'Portfolio',
   components: {
-    portfolioChart: () => import('../components/PortfolioChart.vue')
+    portfolioChart: () => import('../components/PortfolioChart.vue') // import portfolio chart
   },
   data () {
     return {
@@ -37,22 +37,22 @@ export default {
   },
   created () {
     console.log('User route param:', this.$route.params.user)
-    let user = this.$route.params.user
+    let user = this.$route.params.user // get user to target
 
-    if (user === undefined) {
+    if (user === undefined) { // if user specified search for that user
       this.loadSelf(this.$store.state.user)
-    } else {
+    } else { // if no user specified search for self
       this.loadOther(user)
     }
   },
   methods: {
-    loadSelf (id) {
+    loadSelf (id) { // load self from own ID
       console.log('User id', id)
-      if (id === '') {
+      if (id === '') { // if there is no ID, log in
         this.$router.push('/auth/login')
       } else {
         let self = this
-        axios
+        axios // request user info
           .get(`http://localhost:3000/api/users/get/user/${self.$store.state.user}`, {
             headers: {
               'Access-Control-Allow-Origin': '*',
@@ -60,19 +60,19 @@ export default {
             }
           })
           .then((response) => {
-            let user = response.data[0]
-            self.user = user
-            self.ready = true
-            self.$store.commit('updateBalance', user.balance)
+            let user = response.data[0] // store user info
+            self.user = user // display user data
+            self.ready = true // ready the portfolio
+            self.$store.commit('updateBalance', user.balance) // update user's balance globally
           })
-          .catch((err) => {
+          .catch((err) => { // if there is an error, display it
             self.err = err
           })
       }
     },
-    loadOther (user) { // # FIX # make more effecient by searching for particular user
+    loadOther (user) { // load in the target user
       let self = this
-      axios
+      axios // get all users
         .get(`http://localhost:3000/api/users/get/users/`, {
           headers: {
             'Access-Control-Allow-Origin': '*',
@@ -82,17 +82,18 @@ export default {
         .then((response) => {
           let users = response.data
 
+          // search through all users and find user with matching username
           for (var i = 0; i < users.length; i++) {
             if (users[i].username === user) {
-              self.user = users[i]
-              self.ready = true
+              self.user = users[i] // display user info
+              self.ready = true // ready the portfolio
               return
             }
           }
 
-          self.err = 'User Not Found'
+          self.err = 'User Not Found' // dipslay error if user could not be found
         })
-        .catch((err) => {
+        .catch((err) => { // if error finding all users, log it
           self.err = err
         })
     }

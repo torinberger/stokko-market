@@ -104,12 +104,12 @@ export default {
   name: 'MyLayout',
   data () {
     return {
-      leftDrawerOpen: this.$q.platform.is.desktop
+      leftDrawerOpen: this.$q.platform.is.desktop // boolean for when the left drawer is open
     }
   },
   computed: {
     balance () {
-      return this.$store.state.balance
+      return this.$store.state.balance // keep balance updated
     }
   },
   methods: {
