@@ -30,7 +30,7 @@
     </div>
 
     <div id="stock-info" v-if="stockMetaData">
-      <h4>{{ stockMetaData.name }}<span> {{ stockMetaData.symbol }}</span><span style="float: right;">${{ currentStockPrice }}</span></h4>
+      <h4>{{ stockMetaData.name }}<span> [{{ stockMetaData.symbol }}]</span><span style="float: right;">${{ currentStockPrice }}</span></h4>
       <p>{{ stockMetaData.description }}</p>
       <div id="stock-interactions" v-if='authenticated'>
         <q-btn label="Buy" :disabled="disableInput || Math.floor(balance / currentStockPrice) <= 0" color="primary" @click="alertBuy = true" />
@@ -61,7 +61,7 @@
             </q-card-section>
 
             <q-card-section>
-              <p>+${{ currentStockPrice * amountToBuy }}</p>
+              <p>+${{ currentStockPrice * amountToBuy }} / Maximum sellable: {{ maxToSell }}</p>
             </q-card-section>
 
             <q-card-actions align="right">
@@ -378,7 +378,7 @@ export default {
   background: #212733;
 }
 
-#stock-info h4 {
+#stock-info h4, p {
   margin: 1vh;
   width: auto;
   color: white;

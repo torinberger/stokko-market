@@ -58,7 +58,7 @@ module.exports = (database) => {
     let stockSymbol = ctx.params.stock
     let timeInterval = ctx.params.time
 
-    const key = 'TSCOBBU3JCTRMZVA'
+    const key = require('../../private').api.key
 
     await axios
       .get(`https://www.alphavantage.co/query?function=TIME_SERIES_${timeInterval == 'INTRADAY' ? timeInterval : timeInterval + '_ADJUSTED'}&symbol=${stockSymbol}&apikey=${key}&interval=60min`)
