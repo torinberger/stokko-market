@@ -1,4 +1,4 @@
-# Stokko Market Whitepaper
+# Stokko Market
 Simple stock market simulator, uses real world data from stock APIs.
 ## Usage
 ### Frontend
